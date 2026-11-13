@@ -1,0 +1,6 @@
+Flask>=3.0,<4
+Flask-Cors>=4,<7
+requests>=2.31,<3
+python-dotenv>=1,<2
+lxml>=4.9,<7
+PyMuPDF>=1.23,<3

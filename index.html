@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="version" content="5.2.0">
+    <link rel="icon" href="data:,">
     <title>PPTX Translation Tool v5.2</title>
     <style>
         /* ========== ПОЛНЫЕ СТИЛИ ========== */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; color: #1a2634; height: 100vh; overflow: hidden; }
         .app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
+
         /* Панели */
         .toolbar-primary { background: white; padding: 12px 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .toolbar-secondary { background: #f8fafc; padding: 8px 20px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; border-bottom: 1px solid #e2e8f0; }
         .slide-nav { display: flex; gap: 8px; align-items: center; background: #f1f5f9; padding: 4px 12px; border-radius: 40px; margin-left: auto; }
         .slide-nav span { min-width: 60px; text-align: center; font-weight: 500; }
-        
+
         /* Кнопки */
         .btn { padding: 8px 16px; border: none; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px; }
         .btn:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -26,7 +27,7 @@
         .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
         .btn-icon { padding: 8px 12px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 18px; transition: all 0.2s; }
         .btn-icon:hover { background: #e2e8f0; transform: translateY(-1px); }
-        
+
         /* Layout */
         .main-layout { display: flex; flex: 1; overflow: hidden; gap: 0; background: #f0f2f5; }
         .slides-sidebar { width: 260px; flex-shrink: 0; background: white; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; }
@@ -34,12 +35,12 @@
         .visual-area { flex: 1; min-width: 400px; background: #f8fafc; padding: 16px; overflow: auto; display: flex; flex-direction: column; }
         .resize-handle { width: 4px; background: #e2e8f0; cursor: col-resize; flex-shrink: 0; transition: background 0.2s; }
         .resize-handle:hover { background: #3b82f6; }
-        
+
         /* Слайд */
         .slide-canvas { position: relative; background: #eef2f8; border-radius: 16px; overflow: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; }
         .slide-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; object-position: top left; pointer-events: none; }
         .block-overlay { position: relative; width: 100%; height: 100%; }
-        
+
         /* Блоки */
         .block-box { position: absolute; border: 2px solid #3b82f6; background: rgba(59, 130, 246, 0.15); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
         .block-box:hover { border-width: 3px; background: rgba(59, 130, 246, 0.25); z-index: 10; }
@@ -51,18 +52,18 @@
         .block-box.topic .block-num { background: #ef4444; }
         .block-box.subtopic .block-num { background: #f59e0b; color: #1e293b; }
         .block-run { position: absolute; bottom: 4px; right: 4px; background: rgba(0,0,0,0.6); color: white; border-radius: 12px; font-size: 9px; padding: 2px 6px; pointer-events: none; }
-        
+
         /* Лассо */
         .lasso-rect { position: absolute; border: 2px dashed #f97316; background: rgba(249, 115, 22, 0.15); pointer-events: none; z-index: 100; display: none; }
         .slide-canvas.lasso-drawing { cursor: crosshair; }
         .slide-canvas.lasso-drawing .block-box { cursor: crosshair; }
-        
+
         /* Панель областей */
         .areas-panel { background: white; border-radius: 12px; padding: 12px; margin-bottom: 12px; border: 1px solid #e2e8f0; }
         .areas-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .areas-list { display: flex; flex-wrap: wrap; gap: 8px; max-height: 100px; overflow-y: auto; }
         .area-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 10px; font-size: 11px; }
-        
+
         /* Слайд-бар */
         .slides-header { padding: 16px; border-bottom: 1px solid #e2e8f0; background: white; }
         .slides-header h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
@@ -80,7 +81,7 @@
         .slide-status.pending { background: #f1f5f9; color: #64748b; }
         .slide-status.translated { background: #dbeafe; color: #1e40af; }
         .slide-status.done { background: #d1fae5; color: #065f46; }
-        
+
         /* Правая панель */
         .editor-header { padding: 16px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
         .text-list { flex: 1; overflow-y: auto; padding: 12px; }
@@ -111,7 +112,7 @@
     border-color: #3b82f6;
 }
         .sep-warn { display: inline-block; background: #f59e0b; color: #1a1a1a; padding: 2px 8px; border-radius: 12px; font-size: 10px; margin-left: 6px; font-weight: 600; cursor: help; }
-        
+
         /* Модальные окна */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
         .modal-content { background: white; border-radius: 24px; padding: 24px; max-width: 90vw; max-height: 90vh; overflow: auto; }
@@ -125,17 +126,16 @@
         .setting-group { margin-bottom: 20px; }
         .setting-group label { display: block; font-size: 12px; font-weight: 500; color: #475569; margin-bottom: 6px; }
         .setting-group input, .setting-group select, .setting-group textarea { width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-family: inherit; }
-        
+
         /* Статус */
         #status { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 12px; background: white; box-shadow: 0 8px 24px rgba(0,0,0,0.15); display: none; z-index: 3000; }
         #status.success { background: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
         #status.error { background: #fee2e2; color: #991b1b; border-left: 4px solid #ef4444; }
         #status.info { background: #dbeafe; color: #1e40af; border-left: 4px solid #3b82f6; }
         .version-badge { position: fixed; bottom: 12px; left: 12px; background: rgba(0,0,0,0.6); color: white; padding: 4px 10px; border-radius: 20px; font-size: 10px; z-index: 1000; }
-        
+
         /* Вспомогательные */
         .small { font-size: 11px; color: #64748b; }
-        .abbreviate-options { margin-top: 12px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
         .variant-option-btn { padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 20px; cursor: pointer; }
         .variant-option-btn.original { background: #10b981; }
         .run-item { border-left: 3px solid #3b82f6; background: white; padding: 12px; margin-bottom: 12px; border-radius: 8px; }
@@ -154,7 +154,7 @@
         .backend-status-icon { font-size: 14px; }
         .backend-status-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         @media (max-width: 1200px) { .backend-status { max-width: 250px; } }
-        @media (max-width: 900px) { .backend-status { margin-left: 0; width: 100%; max-width: none; } }       
+        @media (max-width: 900px) { .backend-status { margin-left: 0; width: 100%; max-width: none; } }
 
     </style>
 </head>
@@ -166,7 +166,7 @@
         <button class="btn btn-primary" id="translateSlidesBtn">🌐 Перевести слайды</button>
         <button class="btn btn-success" id="applyBtn">💾 Применить перевод</button>
         <button class="btn btn-secondary" id="exportBtn">📦 Экспорт PPTX</button>
-        
+
         <div class="slide-nav">
             <button class="btn-secondary" id="prevSlide">◀</button>
             <span id="slideCounter">1/1</span>
@@ -175,7 +175,7 @@
     </div>
     <!-- Нижняя панель (инструменты, сгруппированные по темам) -->
     <div class="toolbar-secondary">
-        
+
         <!-- Группа: Сессия -->
         <div class="tool-group">
             <span class="tool-group-label">💾 Сессия</span>
@@ -185,7 +185,7 @@
             </div>
         </div>
 
-        
+
         <!-- Группа: Переводы -->
         <div class="tool-group">
             <span class="tool-group-label">📝 Переводы</span>
@@ -197,7 +197,7 @@
                 <button class="btn-icon" id="importTranslationsBtn" title="Импорт переводов">📥</button>
             </div>
         </div>
-        
+
         <!-- Группа: DeepSeek AI -->
         <div class="tool-group">
             <span class="tool-group-label">🤖 DeepSeek</span>
@@ -206,7 +206,7 @@
                 <button class="btn-icon" id="activeGlossaryBtn" title="Актуальный глоссарий">📖</button>
             </div>
         </div>
-        
+
         <!-- Группа: Разметка -->
         <div class="tool-group">
             <span class="tool-group-label">🏷️ Разметка</span>
@@ -215,7 +215,7 @@
                 <button class="btn-icon" id="lassoBtn" title="Лассо / области">🔲</button>
             </div>
         </div>
-        
+
         <!-- Группа: Система -->
         <div class="tool-group">
             <span class="tool-group-label">⚙️ Система</span>
@@ -232,7 +232,7 @@
         </div>
 
     </div>
-    
+
     <!-- Три колонки -->
     <div class="main-layout">
         <div class="slides-sidebar">
@@ -254,7 +254,7 @@
             </div>
             <div class="slides-list" id="slidesList"></div>
         </div>
-        
+
         <div class="visual-area">
             <div id="areasPanel" class="areas-panel" style="display:none;">
                 <div class="areas-header">
@@ -273,7 +273,7 @@
                 <span id="whiteValue">0%</span>
             </div>
         </div>
-        
+
         <div class="editor-area">
             <div class="editor-header">
                 <h3>📝 Блоки слайда</h3>
@@ -348,8 +348,6 @@
                 <select id="deepseekModel"><option value="deepseek-reasoner">deepseek-reasoner</option></select>
                 <label>Прокси:</label>
                 <input type="text" id="proxyUrl" placeholder="http://...">
-                <label>Приоритет перевода:</label>
-                <select id="translationPriority"><option value="api">🤖 API</option><option value="manual">📝 Ручной</option></select>
             </div>
         </div>
         <div class="tab-pane" data-tab="variants">
@@ -480,14 +478,14 @@
 <div id="selectSlidesModal" class="modal">
     <div class="modal-content" style="min-width: 450px; max-width: 550px;">
         <h3>📑 Выберите слайды для перевода</h3>
-        
+
         <!-- Быстрые действия -->
         <div style="display: flex; gap: 8px; margin-bottom: 16px;">
             <button id="selectCurrentOnlyBtn" class="btn-secondary" style="flex: 1;">📌 Только текущий</button>
             <button id="selectAllSlidesBtn" class="btn-secondary" style="flex: 1;">✅ Выбрать все</button>
             <button id="selectNoneBtn" class="btn-secondary" style="flex: 1;">❌ Снять все</button>
         </div>
-        
+
         <div style="margin-bottom: 16px;">
             <label style="display: block; margin-bottom: 8px;">
                 <input type="checkbox" id="selectAllSlidesCheckbox"> Выбрать все слайды
@@ -497,12 +495,12 @@
                 <!-- Чекбоксы для каждого слайда -->
             </div>
         </div>
-        
+
         <div style="display: flex; gap: 8px; margin-bottom: 16px;">
             <span>📊 Выбрано: <strong id="selectedSlidesCount">0</strong> / <span id="totalSlidesCount">0</span></span>
             <span style="margin-left: auto;">📝 Блоков: <strong id="totalBlocksCount">0</strong></span>
         </div>
-        
+
         <div class="modal-buttons" style="justify-content: space-between;">
             <div style="display: flex; gap: 8px;">
                 <button id="downloadSelectedPromptBtn" class="btn-secondary" title="Скачать промпт для выбранных слайдов">📄 Скачать промпт</button>
@@ -520,21 +518,17 @@
 <div id="loadResponseModal" class="modal">
     <div class="modal-content" style="min-width: 600px; max-width: 800px;">
         <h3>📂 Загрузить ответ API из файла</h3>
-        
+
         <div style="margin-bottom: 16px;">
             <label>Файл ответа API (*.txt):</label>
-            <select id="responseFileSelect" style="width: 100%; padding: 8px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                <option value="">Загрузка списка...</option>
-            </select>
+            <input type="file" id="responseFileSelect" accept=".txt,.json" style="width: 100%; padding: 8px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
         </div>
-        
+
         <div style="margin-bottom: 16px;">
             <label>Mapping файл (*.json):</label>
-            <select id="mappingFileSelect" style="width: 100%; padding: 8px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                <option value="">Загрузка списка...</option>
-            </select>
+            <input type="file" id="mappingFileSelect" accept=".json" style="width: 100%; padding: 8px; margin-top: 8px; border-radius: 8px; border: 1px solid #e2e8f0;">
         </div>
-        
+
         <div class="modal-buttons">
             <button id="loadResponseFromFileBtn" class="btn-primary">📥 Загрузить и применить</button>
             <button id="closeLoadResponseBtn" class="btn-secondary">Отмена</button>
@@ -546,7 +540,7 @@
 <div id="saveSessionModal" class="modal">
     <div class="modal-content" style="min-width: 500px; max-width: 600px;">
         <h3>💾 Сохранить сессию</h3>
-        
+
         <div style="margin-bottom: 16px;">
             <label style="display: block; margin-bottom: 8px; font-weight: 500;">📁 Выберите действие:</label>
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
@@ -554,19 +548,19 @@
                 <button id="overwriteExistingBtn" class="btn-secondary">🔄 Перезаписать существующую</button>
             </div>
         </div>
-        
+
         <div id="existingSessionsList" style="margin-top: 16px; display: none;">
             <label style="display: block; margin-bottom: 8px; font-weight: 500;">📋 Существующие сессии:</label>
             <div id="saveSessionsList" style="max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
                 <div style="text-align: center; padding: 20px;">⏳ Загрузка...</div>
             </div>
         </div>
-        
+
         <div id="newSessionNameDiv" style="margin-top: 16px; display: none;">
             <label style="display: block; margin-bottom: 8px; font-weight: 500;">✏️ Название новой сессии:</label>
             <input type="text" id="newSessionName" style="width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px;" placeholder="Введите название...">
         </div>
-        
+
         <div class="modal-buttons" style="margin-top: 20px;">
             <button id="closeSaveSessionBtn" class="btn-secondary">Отмена</button>
         </div>
@@ -586,20 +580,20 @@ const AppState = {
     slideWidth: 10, slideHeight: 7.5,
     blocks: [], order: [], translations: {}, selectedBlockId: null,
     slidesProcessed: {},
-    
+
     allOrders: {}, allTranslations: {}, allBlocksCache: {}, originalBlocksCache: {},
     slideMarkers: {}, slideAreas: {},
-    
+
     settings: {
         api_key: '', model: 'deepseek-reasoner', proxy_url: '',
         show_separators: true, sort_direction: 'top-bottom',
         translation_priority: 'api', auto_topic: true,
         blur: 0, white_overlay: 0
     },
-    
+
     lassoMode: false, permanentSelectedBlocks: new Set(), tempSelectedBlocks: new Set(),
     isDrawing: false, lassoStart: null, lassoRect: null,
-    
+
     translationVariants: [],
     selectedVariants: {}
 };
@@ -616,7 +610,7 @@ function showStatus(msg, type) {
     clearTimeout(window.statusTimeout);
     window.statusTimeout = setTimeout(() => s.style.display = 'none', 3000);
 }
-function escapeHtml(t) { return t ? t.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])) : ''; }
+function escapeHtml(t) { return String(t ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function statusLabel(s) { return {pending:'⏸',translated:'📝',done:'✅',error:'❌'}[s] || '⏸'; }
 function getConfig() {
     return {
@@ -646,9 +640,9 @@ const MAX_STATUS_MESSAGES = 1;
 function setBackendStatus(message, type = 'info') {
     const statusText = document.getElementById('backendStatusText');
     const statusIcon = document.querySelector('.backend-status-icon');
-    
+
     if (!statusText) return;
-    
+
     // Определяем иконку по типу
     const icons = {
         'info': '🔄',
@@ -661,14 +655,14 @@ function setBackendStatus(message, type = 'info') {
         'save': '💾',
         'ai': '🤖'
     };
-    
+
     statusIcon.textContent = icons[type] || '🔄';
     statusText.textContent = message;
-    
+
     // Сохраняем в истории
     backendStatusMessages.unshift({ message, type, time: new Date() });
     if (backendStatusMessages.length > 10) backendStatusMessages.pop();
-    
+
     console.log(`📡 ${message}`);
 }
 
@@ -683,14 +677,14 @@ let statusPollInterval = null;
 
 function startStatusPolling() {
     if (statusPollInterval) clearInterval(statusPollInterval);
-    
+
     statusPollInterval = setInterval(async () => {
         if (!AppState.session) return;
-        
+
         try {
             const res = await fetch(`/api/status/${AppState.session}`);
             const data = await res.json();
-            
+
             if (data.last_operation) {
                 setBackendStatus(data.last_operation, 'info');
             }
@@ -719,26 +713,29 @@ async function saveCurrentSession() {
         showStatus('Нет активной сессии', 'error');
         return;
     }
-    
-    // Сначала получаем список сохраненных сессий
+
     try {
+        await syncTranslationsToServer();
+        // Сначала получаем список сохраненных сессий
         const res = await fetch('/api/sessions/list');
         const data = await res.json();
         const existingSessions = data.sessions || [];
-        
+
         // Проверяем, есть ли уже сессия с таким же именем (по оригинальному имени)
         const originalName = AppState.originalName || 'presentation';
         const existingSame = existingSessions.find(s => s.original_name === originalName);
-        
+
         let customName = null;
-        
+        let overwriteExisting = false;
+
         if (existingSame) {
             // Спрашиваем, перезаписать или создать новую
             const action = confirm(`Сессия "${existingSame.folder}" уже существует.\n\nНажмите "OK" для перезаписи\n"Отмена" для создания новой версии`);
-            
+
             if (action) {
                 // Перезапись - используем то же имя
                 customName = existingSame.folder;
+                overwriteExisting = true;
             } else {
                 // Создание новой - генерируем имя с датой
                 const dateStr = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
@@ -748,18 +745,19 @@ async function saveCurrentSession() {
         } else {
             // Нет существующей сессии - запрашиваем имя
             customName = prompt('Введите название для сохранения (или оставьте пустым для авто-имени):');
+            if (customName === null) return;
         }
-        
+
         showStatus('💾 Сохранение сессии...', 'info');
-        
+
         const saveRes = await fetch(`/api/sessions/save/${AppState.session}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: customName || null, overwrite: !!existingSame })
+            body: JSON.stringify({ name: customName || null, overwrite: overwriteExisting })
         });
-        
+
         const saveData = await saveRes.json();
-        
+
         if (saveData.success) {
             showStatus(`✅ Сессия сохранена: ${saveData.folder}`, 'success');
         } else {
@@ -773,31 +771,31 @@ async function saveCurrentSession() {
 async function loadSessionsList() {
     const modal = document.getElementById('sessionsModal');
     const listDiv = document.getElementById('sessionsList');
-    
+
     modal.style.display = 'flex';
     listDiv.innerHTML = '<div style="text-align: center; padding: 40px;">⏳ Загрузка...</div>';
-    
+
     try {
         const res = await fetch('/api/sessions/list');
         const data = await res.json();
-        
+
         if (!data.success) throw new Error(data.error);
-        
+
         const sessions = data.sessions || [];
-        
+
         if (sessions.length === 0) {
             listDiv.innerHTML = '<div style="text-align: center; padding: 40px; color: #94a3b8;">Нет сохраненных сессий</div>';
             return;
         }
-        
+
         let html = '<table style="width:100%; border-collapse: collapse;">';
         html += '<tr style="background: #f1f5f9;"><th>Название</th><th>Слайдов</th><th>Переводы</th><th>Дата</th><th>Действия</th></tr>';
-        
+
         sessions.forEach(s => {
             const date = s.saved_at ? new Date(s.saved_at).toLocaleString() : 'неизвестно';
             const hasTrans = s.has_translations ? '✅' : '❌';
             const workOk = s.work_exists && s.original_exists;
-            
+
             html += `<tr style="border-bottom: 1px solid #e2e8f0;">
                 <td style="padding: 10px;"><strong>${escapeHtml(s.folder)}</strong><br><span class="small">${escapeHtml(s.original_name)}</span></td>
                 <td style="padding: 10px; text-align: center;">${s.total_slides}</td>
@@ -809,10 +807,10 @@ async function loadSessionsList() {
                 </td>
             </tr>`;
         });
-        
+
         html += '</table>';
         listDiv.innerHTML = html;
-        
+
     } catch (e) {
         listDiv.innerHTML = `<div style="color: #ef4444; padding: 20px;">❌ ${e.message}</div>`;
     }
@@ -820,16 +818,16 @@ async function loadSessionsList() {
 
 async function loadSession(folderName) {
     if (!confirm('Загрузить эту сессию? Текущие несохраненные изменения будут потеряны.')) return;
-    
+
     showStatus(`📂 Загрузка сессии ${folderName}...`, 'info');
     setBackendStatus(`📂 Загрузка сохраненной сессии...`, 'info');
-    
+
     try {
         const res = await fetch(`/api/sessions/load/${folderName}`, { method: 'POST' });
         const data = await res.json();
-        
+
         if (!data.success) throw new Error(data.error);
-        
+
         AppState.session = data.session_id;
         AppState.totalSlides = data.meta.total_slides || 0;
         AppState.allOrders = {};
@@ -837,7 +835,10 @@ async function loadSession(folderName) {
         AppState.originalBlocksCache = {};
         AppState.slideMarkers = data.meta.markers || {};
         AppState.slideAreas = data.meta.areas || {};
-        
+        AppState.selectedVariants = data.meta.selected_variants || {};
+        AppState.originalName = data.meta.original_name || 'presentation';
+        AppState.slidesProcessed = {};
+
         // ========== ЗАГРУЖАЕМ ПЕРЕВОДЫ ==========
         if (data.translations) {
             AppState.allTranslations = data.translations;
@@ -845,13 +846,13 @@ async function loadSession(folderName) {
             AppState.allTranslations = {};
         }
         // =====================================
-        
+
         document.getElementById('sessionsModal').style.display = 'none';
-        
+
         await loadSlide(0);
         setBackendStatus(`✅ Сессия загружена (${data.meta.total_slides} слайдов)`, 'success');
         showStatus(`✅ Сессия ${folderName} загружена`, 'success');
-        
+
     } catch (e) {
         showStatus(`Ошибка: ${e.message}`, 'error');
         setBackendStatus(`❌ Ошибка загрузки сессии`, 'error');
@@ -860,11 +861,11 @@ async function loadSession(folderName) {
 
 async function deleteSession(folderName) {
     if (!confirm(`Удалить сессию "${folderName}"? Это действие нельзя отменить.`)) return;
-    
+
     try {
         const res = await fetch(`/api/sessions/delete/${folderName}`, { method: 'DELETE' });
         const data = await res.json();
-        
+
         if (data.success) {
             showStatus(`✅ Сессия удалена`, 'success');
             loadSessionsList(); // Обновляем список
@@ -881,10 +882,10 @@ async function loadSettings() {
         const res = await fetch('/api/settings');
         const data = await res.json();
         AppState.settings = { ...AppState.settings, ...data };
-        
+
         // Загружаем варианты из TXT
         await loadVariantsFromTxt();
-        
+
         // ВАЖНО: Применяем сохраненные enabled из настроек
         if (data.enabled_variants && data.enabled_variants.length > 0) {
             AppState.translationVariants.forEach(v => {
@@ -892,19 +893,18 @@ async function loadSettings() {
             });
             console.log('✅ Применены enabled_variants из настроек:', data.enabled_variants);
         }
-        
+
         // Заполняем поля формы
         document.getElementById('deepseekApiKey').value = AppState.settings.api_key || '';
         document.getElementById('deepseekModel').value = AppState.settings.model || 'deepseek-reasoner';
         document.getElementById('proxyUrl').value = AppState.settings.proxy_url || '';
-        document.getElementById('translationPriority').value = AppState.settings.translation_priority || 'api';
         document.getElementById('autoTopicCheckbox').checked = AppState.settings.auto_topic !== false;
         document.getElementById('showSeparators').checked = AppState.settings.show_separators !== false;
         document.getElementById('blurRange').value = AppState.settings.blur || 0;
         document.getElementById('whiteRange').value = AppState.settings.white_overlay || 0;
         document.getElementById('settingsBlurRange').value = AppState.settings.blur || 0;
         document.getElementById('settingsWhiteRange').value = AppState.settings.white_overlay || 0;
-        
+
         console.log('✅ Настройки загружены');
     } catch (err) {
         console.error('Ошибка загрузки настроек:', err);
@@ -932,7 +932,6 @@ async function saveSettings() {
         api_key: document.getElementById('deepseekApiKey').value.trim(),
         model: document.getElementById('deepseekModel').value,
         proxy_url: document.getElementById('proxyUrl').value.trim(),
-        translation_priority: document.getElementById('translationPriority').value,
         show_separators: document.getElementById('showSeparators').checked,
         auto_topic: document.getElementById('autoTopicCheckbox').checked,
         blur: parseInt(document.getElementById('blurRange').value),
@@ -942,13 +941,13 @@ async function saveSettings() {
             .filter(v => v.enabled)
             .map(v => v.id)
     };
-    
+
     await fetch('/api/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settings)
     });
-    
+
     AppState.settings = { ...AppState.settings, ...settings };
     console.log('✅ Настройки сохранены');
 }
@@ -957,135 +956,47 @@ async function saveSettings() {
 // ЗАГРУЗКА ОТВЕТА API ИЗ ФАЙЛА
 // ============================================================
 
-async function openLoadResponseModal() {
-    const modal = document.getElementById('loadResponseModal');
-    const responseSelect = document.getElementById('responseFileSelect');
-    const mappingSelect = document.getElementById('mappingFileSelect');
-    
-    modal.style.display = 'flex';
-    responseSelect.innerHTML = '<option value="">⏳ Загрузка...</option>';
-    mappingSelect.innerHTML = '<option value="">⏳ Загрузка...</option>';
-    
-    try {
-        const res = await fetch('/api/list_response_files');
-        const data = await res.json();
-        
-        if (!data.success) throw new Error(data.error);
-        
-        // Заполняем ответы
-        let html = '<option value="">-- Выберите файл ответа --</option>';
-        data.responses.forEach(f => {
-            const date = new Date(f.modified).toLocaleString();
-            const sizeKB = (f.size / 1024).toFixed(1);
-            html += `<option value="${f.path}">${f.name} (${sizeKB} KB, ${date})</option>`;
-        });
-        responseSelect.innerHTML = html;
-        
-        // Заполняем mapping
-        html = '<option value="">-- Выберите mapping файл --</option>';
-        data.mappings.forEach(f => {
-            const date = new Date(f.modified).toLocaleString();
-            html += `<option value="${f.path}">${f.name} (${date})</option>`;
-        });
-        mappingSelect.innerHTML = html;
-        
-    } catch (e) {
-        responseSelect.innerHTML = '<option value="">Ошибка загрузки</option>';
-        mappingSelect.innerHTML = '<option value="">Ошибка загрузки</option>';
-        console.error(e);
+function openLoadResponseModal() {
+    if (!AppState.session) {
+        showStatus('Сначала загрузите презентацию', 'error');
+        return;
     }
+    document.getElementById('responseFileSelect').value = '';
+    document.getElementById('mappingFileSelect').value = '';
+    document.getElementById('loadResponseModal').style.display = 'flex';
 }
 
 async function loadResponseFromFile() {
-    const responseSelect = document.getElementById('responseFileSelect');
-    const mappingSelect = document.getElementById('mappingFileSelect');
-    
-    const responsePath = responseSelect.value;
-    const mappingPath = mappingSelect.value;
-    
-    if (!responsePath) {
-        showStatus('Выберите файл ответа', 'error');
-        return;
-    }
-    
-    if (!mappingPath) {
-        showStatus('Выберите mapping файл', 'error');
+    const responseFile = document.getElementById('responseFileSelect').files[0];
+    const mappingFile = document.getElementById('mappingFileSelect').files[0];
+    if (!responseFile || !mappingFile) {
+        showStatus('Выберите файл ответа и mapping-файл', 'error');
         return;
     }
 
-    if (!responsePath || !mappingPath) {  // ← ИСПРАВЛЕНО
-        showStatus('Выберите оба файла', 'error');
-        return;
-    }
-    
-    setBackendStatus(`📂 Загрузка ответа из файла...`, 'info');
-    showStatus(`📂 Загрузка ответа из файла...`, 'info');
-    
+    const form = new FormData();
+    form.append('session', AppState.session);
+    form.append('response_file', responseFile);
+    form.append('mapping_file', mappingFile);
+    setBackendStatus('📂 Загрузка ответа из файла...', 'info');
+
     try {
-        const res = await fetch('/api/load_response_from_file', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                session: AppState.session,
-                file_path: responsePath,  // ← используем правильную переменную
-                mapping_path: mappingPath
-            })
-        });
-        
+        const res = await fetch('/api/load_response_from_file', { method: 'POST', body: form });
         const data = await res.json();
-        
-        if (!res.ok) throw new Error(data.error);
-        
-        const fullResponse = data.full_response;
-        
-        console.log('📥 Загружен полный ответ:', fullResponse);
-        console.log(`   - Слайды: ${fullResponse.slides}`);
-        console.log(`   - Блоков: ${fullResponse.blocks.length}`);
-        console.log(`   - Вариантов: ${fullResponse.active_variants.length}`);
-        
-        // Отправляем на сервер для сохранения в сессию
-        const saveRes = await fetch(`/api/apply_loaded_response/${AppState.session}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(fullResponse)
-        });
-        
-        const saveData = await saveRes.json();
-        
-        if (!saveRes.ok) throw new Error(saveData.error);
-        
-        // Обновляем AppState
-        if (saveData.translations) {
-            for (const [slideIdx, slideTrans] of Object.entries(saveData.translations)) {
-                const idx = parseInt(slideIdx);
-                if (!AppState.allTranslations[idx]) {
-                    AppState.allTranslations[idx] = {};
-                }
-                Object.assign(AppState.allTranslations[idx], slideTrans);
-            }
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        for (const [slideIdx, slideTrans] of Object.entries(data.translations || {})) {
+            const idx = Number(slideIdx);
+            AppState.allTranslations[idx] ||= {};
+            Object.assign(AppState.allTranslations[idx], slideTrans);
         }
-        
-        // Обновляем текущий слайд
-        if (AppState.allTranslations[AppState.currentSlide]) {
-            const currentTrans = AppState.allTranslations[AppState.currentSlide];
-            AppState.translations = {};
-            for (const [blockId, trans] of Object.entries(currentTrans)) {
-                const firstVariant = fullResponse.active_variants[0]?.id || 'variant_1';
-                AppState.translations[blockId] = trans[`${firstVariant}_translation`] || '';
-            }
-        }
-        
         await loadSlide(AppState.currentSlide);
         renderSlidesBar();
-        
         document.getElementById('loadResponseModal').style.display = 'none';
-        
-        setBackendStatus(`✅ Загружено ${fullResponse.blocks.length} блоков`, 'success');
-        showStatus(`✅ Загружено ${fullResponse.blocks.length} блоков`, 'success');
-        
-    } catch (e) {
-        setBackendStatus(`❌ Ошибка: ${e.message}`, 'error');
-        showStatus(`Ошибка: ${e.message}`, 'error');
+        setBackendStatus(`✅ Загружено ${data.saved_blocks} блоков`, 'success');
+        showStatus(`✅ Загружено ${data.saved_blocks} блоков`, 'success');
+    } catch (error) {
+        setBackendStatus(`❌ Ошибка: ${error.message}`, 'error');
+        showStatus(`Ошибка импорта: ${error.message}`, 'error');
     }
 }
 
@@ -1098,42 +1009,42 @@ let previewGenerationInProgress = false;
 
 function startPreviewStatusPolling() {
     if (!AppState.session) return;
-    
+
     // Очищаем старый интервал
     if (previewPollInterval) clearInterval(previewPollInterval);
-    
+
     previewGenerationInProgress = true;
     document.getElementById('previewGenerationStatus').style.display = 'block';
-    
+
     previewPollInterval = setInterval(async () => {
         try {
             const res = await fetch(`/api/preview_status/${AppState.session}`);
             const data = await res.json();
-            
+
             if (!res.ok) return;
-            
+
             // Обновляем прогресс
             const progressBar = document.getElementById('previewProgressBar');
             const progressPercent = document.getElementById('previewProgressPercent');
             const statusText = document.getElementById('previewStatusText');
-            
+
             progressBar.style.width = data.progress + '%';
             progressPercent.textContent = data.progress + '%';
-            
+
             if (data.status === 'done' || data.preview_ready) {
                 statusText.textContent = `✅ Превью готовы (${data.generated_pngs}/${data.total_slides})`;
                 clearInterval(previewPollInterval);
                 previewPollInterval = null;
                 previewGenerationInProgress = false;
-                
+
                 // Скрываем статус через 3 секунды
                 setTimeout(() => {
                     document.getElementById('previewGenerationStatus').style.display = 'none';
                 }, 3000);
-                
+
                 // Обновляем слайд-бар с изображениями
                 renderSlidesBar();
-                
+
                 // Перерисовываем текущий слайд
                 if (AppState.currentSlide >= 0) {
                     renderSlide();
@@ -1145,7 +1056,7 @@ function startPreviewStatusPolling() {
             } else {
                 statusText.textContent = `⏳ Ожидание...`;
             }
-            
+
         } catch (e) {
             console.error('Preview status error:', e);
         }
@@ -1167,77 +1078,7 @@ if (AppState.session) {
 }
 
 // ============================================================
-// СКАЧИВАНИЕ ПРОМПТА ДЛЯ ВЫБРАННЫХ СЛАЙДОВ
-// ============================================================
 
-async function downloadSelectedPrompt() {
-    if (selectedSlidesForTranslation.size === 0) {
-        showStatus('Выберите хотя бы один слайд', 'error');
-        setBackendStatus('❌ Не выбрано ни одного слайда', 'error');
-        return;
-    }
-    
-    const slides = Array.from(selectedSlidesForTranslation).sort((a, b) => a - b);
-    const config = getConfig();
-    
-    // Считаем количество блоков в выбранных слайдах
-    let totalBlocks = 0;
-    slides.forEach(slide => {
-        totalBlocks += (AppState.allBlocksCache[slide] || []).length;
-    });
-    
-    setBackendStatus(`📊 Анализ ${slides.length} слайдов (${totalBlocks} блоков)...`, 'info');
-    showStatus(`📊 Генерация промпта для ${slides.length} слайдов...`, 'info');
-    
-    try {
-        const enabledVariants = (AppState.translationVariants || [])
-            .filter(v => v.enabled)
-            .map(v => v.id);
-        
-        setBackendStatus(`📝 Формирование промпта (${enabledVariants.length} вариантов)...`, 'info');
-        
-        const res = await fetch(`/api/export_prompt_selected/${AppState.session}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                ...config,
-                slides: slides,
-                enabled_variants: enabledVariants,
-                target_lang: 'ru'
-            })
-        });
-        
-        setBackendStatus(`⏳ Ожидание ответа от сервера...`, 'info');
-        
-        if (!res.ok) {
-            const error = await res.text();
-            setBackendStatus(`❌ Ошибка сервера: ${res.status}`, 'error');
-            throw new Error(`Ошибка ${res.status}: ${error.substring(0, 200)}`);
-        }
-        
-        // Получаем размер ответа
-        const blob = await res.blob();
-        const sizeKB = (blob.size / 1024).toFixed(1);
-        
-        setBackendStatus(`📥 Получен промпт (${sizeKB} KB)`, 'download');
-        
-        // Скачиваем файл
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `prompt_slides_${slides.map(s => s + 1).join('_')}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-        
-        setBackendStatus(`✅ Промпт для ${slides.length} слайдов скачан (${sizeKB} KB)`, 'success');
-        showStatus(`✅ Промпт скачан (${slides.length} слайдов, ${totalBlocks} блоков)`, 'success');
-        
-    } catch (e) {
-        console.error('Ошибка при скачивании промпта:', e);
-        setBackendStatus(`❌ Ошибка: ${e.message}`, 'error');
-        showStatus(`Ошибка: ${e.message}`, 'error');
-    }
-}
 // ============================================================
 // ВЫБОР СЛАЙДОВ И ПЕРЕВОД (НОВАЯ ЛОГИКА)
 // ============================================================
@@ -1373,9 +1214,7 @@ async function translateSelectedSlides() {
             const currentTrans = AppState.allTranslations[AppState.currentSlide];
             AppState.translations = {};
             for (const [blockId, trans] of Object.entries(currentTrans)) {
-                const firstVariant = (AppState.translationVariants || [])
-                    .find(v => v.enabled)?.id || 'variant_1';
-                AppState.translations[blockId] = trans[`${firstVariant}_translation`] || '';
+                AppState.translations[blockId] = getPriorityTranslation(trans, getSelectedVariantId(blockId));
             }
         }
 
@@ -1394,110 +1233,6 @@ async function translateSelectedSlides() {
         showStatus(`Ошибка: ${e.message}`, 'error');
         progressDiv.style.display = 'none';
     }
-}
-
-function selectFile(accept, title) {
-    return new Promise(resolve => {
-        const input = document.createElement('input'); input.type = 'file'; input.accept = accept; input.title = title;
-        input.onchange = e => { const f = e.target.files[0]; resolve(f ? { name: f.name, path: f.path || f.name } : null); };
-        input.click();
-    });
-}
-
-async function loadResponseFromFile() {
-    const slides = Array.from(selectedSlidesForTranslation).sort((a, b) => a - b);
-
-    if (slides.length === 0) {
-        showStatus('Сначала выберите слайды', 'error');
-        return;
-    }
-
-    // Выбор файла ответа
-    const responseFile = await selectFile('.txt', 'Выберите файл ответа API (api_response_*.txt)');
-    if (!responseFile) return;
-
-    // Выбор mapping файла
-    const mappingFile = await selectFile('.json', 'Выберите mapping файл (mapping_*.json)');
-    if (!mappingFile) return;
-
-    setBackendStatus(`📂 Загрузка ответа из файла...`, 'info');
-    showStatus(`📂 Загрузка ответа...`, 'info');
-
-    try {
-        const res = await fetch('/api/load_response_from_file', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                session: AppState.session,
-                file_path: responseFile.path,
-                mapping_path: mappingFile.path
-            })
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-
-        console.log('💾 Сохранено блоков из файла:', data.saved_blocks);
-
-        // Обновляем AppState
-        if (data.translations) {
-            for (const [slideIdx, slideTrans] of Object.entries(data.translations)) {
-                const idx = parseInt(slideIdx);
-                if (!AppState.allTranslations[idx]) {
-                    AppState.allTranslations[idx] = {};
-                }
-                Object.assign(AppState.allTranslations[idx], slideTrans);
-            }
-        }
-
-        // Обновляем текущий слайд
-        if (AppState.allTranslations[AppState.currentSlide]) {
-            const currentTrans = AppState.allTranslations[AppState.currentSlide];
-            AppState.translations = {};
-            for (const [blockId, trans] of Object.entries(currentTrans)) {
-                const firstVariant = (AppState.translationVariants || [])
-                    .find(v => v.enabled)?.id || 'variant_1';
-                AppState.translations[blockId] = trans[`${firstVariant}_translation`] || '';
-            }
-        }
-
-        await loadSlide(AppState.currentSlide);
-        renderSlidesBar();
-
-        document.getElementById('loadResponseModal').style.display = 'none';
-
-        setBackendStatus(`✅ Загружено ${data.saved_blocks} блоков`, 'success');
-        showStatus(`✅ Загружено ${data.saved_blocks} блоков`, 'success');
-
-    } catch (e) {
-        console.error('Ошибка загрузки:', e);
-        setBackendStatus(`❌ Ошибка: ${e.message}`, 'error');
-        showStatus(`Ошибка: ${e.message}`, 'error');
-    }
-}
-
-// Вспомогательная функция выбора файла
-function selectFile(accept, title) {
-    return new Promise((resolve) => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = accept;
-        input.title = title;
-
-        input.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                resolve({
-                    name: file.name,
-                    path: file.path || file.name // file.path работает в Electron, в браузере — только имя
-                });
-            } else {
-                resolve(null);
-            }
-        };
-
-        input.click();
-    });
 }
 
 async function downloadSelectedPrompt() {
@@ -1528,41 +1263,41 @@ function exportAllSlidesTranslations() {
         showStatus('Сначала загрузите презентацию', 'error');
         return;
     }
-    
+
     let output = `# ПОЛНЫЙ ЭКСПОРТ ПЕРЕВОДОВ\n`;
     output += `# Сессия: ${AppState.session}\n`;
     output += `# Дата: ${new Date().toLocaleString()}\n`;
     output += `# Всего слайдов: ${AppState.totalSlides}\n\n`;
-    
+
     let totalTranslated = 0;
-    
+
     for (let slide = 0; slide < AppState.totalSlides; slide++) {
         const slideTrans = AppState.allTranslations[slide] || {};
         const slideBlocks = AppState.allBlocksCache[slide] || AppState.blocks;
-        
+
         // Проверяем, есть ли переводы на этом слайде
         const hasTranslations = Object.keys(slideTrans).length > 0;
         if (!hasTranslations) continue;
-        
+
         output += `\n${'='.repeat(50)}\n`;
         output += `СЛАЙД ${slide + 1}\n`;
         output += `${'='.repeat(50)}\n\n`;
-        
+
         // Получаем порядок блоков
         const order = AppState.allOrders[slide] || slideBlocks.map(b => b.id);
-        
+
         order.forEach((blockId, idx) => {
             const block = slideBlocks.find(b => b.id === blockId);
             if (!block) return;
-            
+
             // Оригинал
             let original = block.text || '';
             if (block.runs && block.runs.length > 1) {
                 original = block.runs.map(r => r.text || '').join(' | ');
             }
-            
+
             output += `[${idx + 1}] ${original}\n`;
-            
+
             // Переводы (все варианты)
             const trans = slideTrans[blockId];
             if (trans) {
@@ -1573,7 +1308,7 @@ function exportAllSlidesTranslations() {
                         const bNum = parseInt(b.split('_')[0].replace('variant', '')) || 1;
                         return aNum - bNum;
                     });
-                
+
                 variantKeys.forEach((key, vIdx) => {
                     const value = trans[key];
                     if (value) {
@@ -1586,19 +1321,19 @@ function exportAllSlidesTranslations() {
             output += '\n';
         });
     }
-    
+
     if (totalTranslated === 0) {
         showStatus('Нет переводов для экспорта', 'error');
         return;
     }
-    
+
     const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `all_translations_${AppState.session.slice(0, 8)}.txt`;
     a.click();
     URL.revokeObjectURL(a.href);
-    
+
     showStatus(`✅ Экспортировано переводов: ${totalTranslated}`, 'success');
 }
 
@@ -1612,24 +1347,24 @@ function importTranslationsFromFile() {
         showStatus('Сначала загрузите презентацию', 'error');
         return;
     }
-    
+
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.txt';
     input.onchange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        
+
         showStatus('📥 Импорт переводов...', 'info');
         setBackendStatus('📥 Импорт переводов из файла...', 'download');
-        
+
         // ========== ЗАГРУЖАЕМ НЕДОСТАЮЩИЕ СЛАЙДЫ ==========
         for (let slide = 0; slide < AppState.totalSlides; slide++) {
             if (!AppState.allBlocksCache[slide]) {
                 const res = await fetch(`/api/slide/${AppState.session}/${slide}`);
                 const d = await res.json();
                 AppState.allBlocksCache[slide] = d.blocks;
-                
+
                 // ========== ВАЖНО: Сохраняем порядок ==========
                 if (!AppState.allOrders[slide]) {
                     // Сортируем блоки так же, как при экспорте
@@ -1640,7 +1375,7 @@ function importTranslationsFromFile() {
                     AppState.allOrders[slide] = sorted.map(b => b.id);
                 }
                 // ===========================================
-                
+
                 if (!AppState.originalBlocksCache) AppState.originalBlocksCache = {};
                 if (!AppState.originalBlocksCache[slide]) {
                     AppState.originalBlocksCache[slide] = JSON.parse(JSON.stringify(d.blocks));
@@ -1648,18 +1383,18 @@ function importTranslationsFromFile() {
             }
         }
         // =================================================
-        
+
         const reader = new FileReader();
         reader.onload = async (ev) => {
             const content = ev.target.result;
             const parsed = parseTranslationsFile(content);
-            
+
             if (parsed.total === 0) {
                 showStatus('Не найдено переводов в файле', 'error');
                 setBackendStatus('❌ Переводы не найдены', 'error');
                 return;
             }
-            
+
             // Сохраняем в AppState для ВСЕХ слайдов
             for (const [slideIdx, slideTranslations] of Object.entries(parsed.slides)) {
                 const idx = parseInt(slideIdx);
@@ -1668,35 +1403,28 @@ function importTranslationsFromFile() {
                 }
                 Object.assign(AppState.allTranslations[idx], slideTranslations);
             }
-            
+
             // Обновляем текущий слайд
             if (AppState.allTranslations[AppState.currentSlide]) {
                 const currentTrans = AppState.allTranslations[AppState.currentSlide];
                 AppState.translations = {};
                 for (const [blockId, trans] of Object.entries(currentTrans)) {
-                    const firstKey = Object.keys(trans).find(k => k.endsWith('_translation'));
-                    if (firstKey) {
-                        AppState.translations[blockId] = trans[firstKey];
-                    }
+                    AppState.translations[blockId] = getPriorityTranslation(trans, getSelectedVariantId(blockId));
                 }
             }
-            
+
             updateTextList();
             renderSlidesBar();
             renderSlide();
 
             // Сохраняем переводы на сервер
             try {
-                await fetch(`/api/save_translations/${AppState.session}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ translations: AppState.allTranslations })
-                });
+                await syncTranslationsToServer();
                 console.log('✅ Переводы отправлены на сервер');
             } catch (e) {
                 console.error('Ошибка сохранения на сервер:', e);
             }
-            
+
             setBackendStatus(`✅ Импортировано ${parsed.total} переводов на ${parsed.slidesCount} слайдах`, 'success');
             showStatus(`✅ Импортировано ${parsed.total} переводов на ${parsed.slidesCount} слайдах`, 'success');
         };
@@ -1712,11 +1440,11 @@ function parseTranslationsFile(content) {
         total: 0,
         slidesCount: 0
     };
-    
+
     let currentSlide = null;
     let currentBlockIdx = null;  // ← позиция в порядке (1, 2, 3...)
     let currentTranslations = {};
-    
+
     for (const line of lines) {
         // Определяем слайд
         const slideMatch = line.match(/^СЛАЙД\s+(\d+)/i);
@@ -1739,7 +1467,7 @@ function parseTranslationsFile(content) {
             result.slidesCount = Math.max(result.slidesCount, currentSlide + 1);
             continue;
         }
-        
+
         // [N] оригинал
         const matchOrig = line.match(/^\[(\d+)\]\s*(.*)/);
         if (matchOrig) {
@@ -1758,7 +1486,7 @@ function parseTranslationsFile(content) {
             currentTranslations = {};
             continue;
         }
-        
+
         // [N'] или [N''] или [N'''] и т.д.
         const matchTrans = line.match(/^\[(\d+)('+)\]\s*(.*)/);
         if (matchTrans && currentSlide !== null) {
@@ -1769,7 +1497,7 @@ function parseTranslationsFile(content) {
             currentTranslations[`variant_${quoteCount}_source`] = 'manual';
         }
     }
-    
+
     // Последний блок
     if (currentSlide !== null && currentBlockIdx !== null && Object.keys(currentTranslations).length > 0) {
         if (!result.slides[currentSlide]) {
@@ -1781,19 +1509,19 @@ function parseTranslationsFile(content) {
             result.total++;
         }
     }
-    
+
     return result;
 }
 
 function getBlockIdByIndex(slideIdx, blockIdx) {
     // Получаем текущий порядок блоков для этого слайда
     const order = AppState.allOrders[slideIdx];
-    
+
     if (order && blockIdx > 0 && blockIdx <= order.length) {
         // Возвращаем ID блока, который находится на позиции blockIdx
         return order[blockIdx - 1];
     }
-    
+
     // Если порядок не сохранен, берем из кэша и сортируем
     const blocks = AppState.allBlocksCache[slideIdx];
     if (blocks && blockIdx > 0 && blockIdx <= blocks.length) {
@@ -1805,7 +1533,7 @@ function getBlockIdByIndex(slideIdx, blockIdx) {
         const block = sorted[blockIdx - 1];
         return block?.id;
     }
-    
+
     return undefined;
 }
 
@@ -2036,13 +1764,13 @@ function renderSlide() {
     const c = document.getElementById('slideCanvas');
     if (!c) return;
     c.innerHTML = '';
-    
+
     const { width: w, height: h } = calculateCanvasSize();
     c.style.width = w + 'px';
     c.style.height = h + 'px';
     c.style.position = 'relative';
     c.style.background = '#eef2f8';
-    
+
     // Добавляем фоновое изображение
     if (AppState.session && !previewGenerationInProgress) {
         const img = document.createElement('img');
@@ -2051,41 +1779,41 @@ function renderSlide() {
         img.onerror = () => img.remove();
         c.appendChild(img);
     }
-    
+
     // Создаем оверлей для блоков
     const overlay = document.createElement('div');
     overlay.className = 'block-overlay';
     overlay.style.position = 'relative';
     overlay.style.width = '100%';
     overlay.style.height = '100%';
-    
+
     const sx = w / AppState.slideWidth;
     const sy = h / AppState.slideHeight;
-    
+
     // Отрисовываем блоки в порядке сортировки
     const orderedBlocks = AppState.order
         .map(id => AppState.blocks.find(b => b.id === id))
         .filter(b => b);
-    
+
     orderedBlocks.forEach(block => {
         const div = document.createElement('div');
         div.className = 'block-box';
         div.dataset.id = block.id;
-        
+
         const marker = getBlockMarker(block.id);
         if (marker === 'topic') div.classList.add('topic');
         else if (marker === 'subtopic') div.classList.add('subtopic');
-        
+
         if (AppState.permanentSelectedBlocks && AppState.permanentSelectedBlocks.has(block.id)) {
             div.classList.add('area-selected');
         }
-        
+
         div.style.position = 'absolute';
         div.style.left = Math.max(0, block.x * sx) + 'px';
         div.style.top = Math.max(0, block.y * sy) + 'px';
         div.style.width = Math.max(block.w * sx, 30) + 'px';
         div.style.height = Math.max(block.h * sy, 30) + 'px';
-        
+
         const orderNum = AppState.order.indexOf(block.id) + 1;
         const markerIcon = marker === 'topic' ? '📌' : (marker === 'subtopic' ? '📄' : '');
         let markerText = '';
@@ -2093,7 +1821,7 @@ function renderSlide() {
         else if (marker === 'subtopic') markerText = '<span style="background:#f59e0b;color:#1e293b;padding:2px 6px;border-radius:4px;font-size:9px;margin-left:4px;">ПОДТОПИК</span>';
 
         div.innerHTML = `<span class="block-num">${orderNum || '?'} ${markerIcon}</span>${markerText}${block.runs_count > 1 ? '<span class="block-run">✎' + block.runs_count + '</span>' : ''}`;
-        
+
         div.onclick = (e) => {
             e.stopPropagation();
             if (e.ctrlKey) { e.preventDefault(); cycleBlockMarker(block.id); return; }
@@ -2102,10 +1830,10 @@ function renderSlide() {
         };
         div.oncontextmenu = (e) => { e.preventDefault(); cycleBlockMarker(block.id); };
         div.ondblclick = () => block.runs_count > 1 ? showRunOrderModal(block.id) : showRunsInfo(block.id);
-        
+
         overlay.appendChild(div);
     });
-    
+
     c.appendChild(overlay);
     updateBlur();
 }
@@ -2128,13 +1856,42 @@ function updateBlur() {
 // ============================================================
 // СПИСОК ТЕКСТОВ
 // ============================================================
+function getSelectedVariantId(blockId, slideIdx = AppState.currentSlide) {
+    return AppState.selectedVariants?.[slideIdx]?.[blockId] || 'variant_1';
+}
 function getPriorityTranslation(trans, varId) {
-    const prio = AppState.settings.translation_priority || 'api';
-    const key = `${varId}_translation`, srcKey = `${varId}_source`;
-    if (prio === 'manual' && trans[srcKey] === 'manual') return trans[key];
-    if (prio === 'api' && trans[srcKey] !== 'manual') return trans[key];
-    for (const [k, v] of Object.entries(trans)) if (k.endsWith('_translation') && v) return v;
-    return trans[key] || '';
+    return trans?.[`${varId}_translation`] || '';
+}
+function setSelectedTranslation(blockId, value, source = 'manual') {
+    const slide = AppState.allTranslations[AppState.currentSlide] ||= {};
+    const trans = slide[blockId] ||= {};
+    const variantId = getSelectedVariantId(blockId);
+    const key = `${variantId}_translation`;
+    const sourceKey = `${variantId}_source`;
+    if (source === 'manual' && trans[sourceKey] !== 'manual' && trans[key] !== undefined) {
+        trans[`${variantId}_api_translation`] = trans[key];
+        trans[`${variantId}_api_source`] = trans[sourceKey] || 'api';
+    }
+    trans[key] = value;
+    trans[sourceKey] = source;
+    AppState.translations[blockId] = value;
+}
+
+let translationsSyncQueue = Promise.resolve();
+function syncTranslationsToServer() {
+    if (!AppState.session) return Promise.resolve();
+    const snapshot = JSON.parse(JSON.stringify(AppState.allTranslations));
+    const operation = translationsSyncQueue.then(async () => {
+        const response = await fetch(`/api/save_translations/${AppState.session}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ translations: snapshot })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Не удалось сохранить правки');
+    });
+    translationsSyncQueue = operation.catch(() => {});
+    return operation;
 }
 function checkSeparatorsMatch(runs, trans) {
     if (!runs || runs.length <= 1) return true;
@@ -2145,68 +1902,68 @@ function checkSeparatorsMatch(runs, trans) {
 function updateSingleBlockPreview(id, text) {
     let clean = text, reorder = null;
     const m = clean.match(/^\[([\d,]+)\]\s*(.*)/);
-    if (m) { 
-        reorder = m[1].split(',').map(n => +n - 1); 
-        clean = m[2]; 
+    if (m) {
+        reorder = m[1].split(',').map(n => +n - 1);
+        clean = m[2];
     }
-    
-    const b = AppState.blocks.find(b => b.id === id); 
+
+    const b = AppState.blocks.find(b => b.id === id);
     if (!b) return;
-    
-    const ti = document.querySelector(`.text-item[data-id="${id}"]`); 
+
+    const ti = document.querySelector(`.text-item[data-id="${id}"]`);
     if (!ti) return;
-    
-    const prev = ti.querySelector('.text-translated-formatted'); 
+
+    const prev = ti.querySelector('.text-translated-formatted');
     if (!prev) return;
-    
-    if (!clean?.trim()) { 
-        prev.innerHTML = '<span style="color:#999">(перевод не введен)</span>'; 
-        return; 
+
+    if (!clean?.trim()) {
+        prev.innerHTML = '<span style="color:#999">(перевод не введен)</span>';
+        return;
     }
-    
-    if (!b.runs?.length) { 
-        prev.innerHTML = escapeHtml(clean); 
-        return; 
+
+    if (!b.runs?.length) {
+        prev.innerHTML = escapeHtml(clean);
+        return;
     }
-    
+
     // Разбиваем с правилом пробелов
     const parts = [];
     let searchPos = 0;
-    
+
     while (searchPos < clean.length) {
         const pipePos = clean.indexOf('|', searchPos);
         if (pipePos === -1) break;
-        
+
         // Часть до |
         const partBefore = clean.substring(searchPos, pipePos);
-        
+
         // Проверяем пробелы вокруг
         const hasLeftSpace = partBefore.endsWith(' ');
         const hasRightSpace = (pipePos + 1 < clean.length && clean[pipePos + 1] === ' ');
-        
+
         // Делаем trim
         const cleanText = partBefore.trim();
-        
+
         // Нужен ли пробел после
         const needSpace = hasLeftSpace || hasRightSpace;
-        
+
         parts.push({
             text: cleanText,
             addSpace: needSpace
         });
-        
+
         // Перемещаемся
         searchPos = pipePos + 1;
         if (hasRightSpace) searchPos++;
     }
-    
+
     // Добавляем последнюю часть
     const lastPart = clean.substring(searchPos);
     parts.push({
         text: lastPart.trim(),
         addSpace: false
     });
-    
+
     // Применяем перестановку если есть
     let fmt = b.runs.map(r => r.formatting || {});
     if (reorder) {
@@ -2219,7 +1976,7 @@ function updateSingleBlockPreview(id, text) {
         }
         fmt = nf;
     }
-    
+
     // Формируем HTML
     let h = '';
     for (let i = 0; i < parts.length; i++) {
@@ -2231,8 +1988,8 @@ function updateSingleBlockPreview(id, text) {
         if (f.color) {
             s += `color:#${f.color};`;
             const colorHex = f.color.toLowerCase();
-            const isLight = (parseInt(colorHex.substr(0,2), 16) > 200 && 
-                            parseInt(colorHex.substr(2,2), 16) > 200 && 
+            const isLight = (parseInt(colorHex.substr(0,2), 16) > 200 &&
+                            parseInt(colorHex.substr(2,2), 16) > 200 &&
                             parseInt(colorHex.substr(4,2), 16) > 200);
             if (isLight) {
                 s += 'text-shadow: 0 0 2px rgba(0,0,0,0.5);';
@@ -2246,49 +2003,49 @@ function updateSingleBlockPreview(id, text) {
             h += ' ';
         }
     }
-    
+
     prev.innerHTML = h;
 }
-    
+
 function updateTextList() {
-    const c = document.getElementById('textList'); 
+    const c = document.getElementById('textList');
     if (!c) return;
-    
-    if (!AppState.blocks?.length) { 
-        c.innerHTML = '<div style="text-align:center;padding:40px;">Загрузите презентацию</div>'; 
-        return; 
+
+    if (!AppState.blocks?.length) {
+        c.innerHTML = '<div style="text-align:center;padding:40px;">Загрузите презентацию</div>';
+        return;
     }
-    
+
     const ordered = AppState.order.map(id => AppState.blocks.find(b => b.id === id)).filter(b => b);
     const origBlocks = AppState.originalBlocksCache[AppState.currentSlide] || AppState.allBlocksCache[AppState.currentSlide] || AppState.blocks;
     let h = '';
-    
+
     ordered.forEach((b, idx) => {
         const orig = origBlocks.find(o => o.id === b.id) || b;
         const marker = getBlockMarker(b.id);
         const trans = AppState.allTranslations[AppState.currentSlide]?.[b.id] || {};
-        
+
         // ========== ИСПРАВЛЕНО: получаем оба варианта ==========
         const selectedVariantId = AppState.selectedVariants?.[AppState.currentSlide]?.[b.id] || 'variant_1';
-        const apiTrans = trans[`${selectedVariantId}_translation`] || '';
         const currentTrans = getPriorityTranslation(trans, selectedVariantId) || '';
         const source = trans[`${selectedVariantId}_source`] || 'api';
-        const isEdited = (currentTrans !== apiTrans);
-        
+        const apiTrans = trans[`${selectedVariantId}_api_translation`] ?? (source === 'manual' ? currentTrans : currentTrans);
+        const isEdited = source === 'manual';
+
         const mismatch = !checkSeparatorsMatch(b.runs, currentTrans);
         let icon = '', cls = '';
-        
-        if (marker === 'topic') { 
-            icon = '📌'; 
-            cls = 'topic-block'; 
-        } else if (marker === 'subtopic') { 
-            icon = '📄'; 
-            cls = 'subtopic-block'; 
+
+        if (marker === 'topic') {
+            icon = '📌';
+            cls = 'topic-block';
+        } else if (marker === 'subtopic') {
+            icon = '📄';
+            cls = 'subtopic-block';
         }
-        
+
         const runBtn = b.runs_count > 1 ? `<span style="background:#f59e0b;padding:2px 8px;border-radius:20px;font-size:10px;cursor:pointer;" onclick="event.stopPropagation();showRunOrderModal(${b.id})">✎${b.runs_count} 🔄</span>` : '';
         adjustAllTextareasHeight();
-        
+
 let origHtml = '';
 if (orig.runs && orig.runs.length) {
     origHtml = orig.runs.map((r, i) => {
@@ -2301,7 +2058,7 @@ if (orig.runs && orig.runs.length) {
             s += `color:#${f.color};`;
             // Проверка на белый цвет
             const colorHex = f.color.toLowerCase();
-            if (colorHex === 'ffffff' || colorHex === 'fff' || 
+            if (colorHex === 'ffffff' || colorHex === 'fff' ||
                 (parseInt(colorHex.substr(0,2), 16) > 230 &&
                  parseInt(colorHex.substr(2,2), 16) > 230 &&
                  parseInt(colorHex.substr(4,2), 16) > 230)) {
@@ -2324,20 +2081,20 @@ if (orig.runs && orig.runs.length) {
 
         h += `<div class="text-item ${AppState.selectedBlockId === b.id ? 'selected' : ''} ${cls} ${mismatch ? 'separator-mismatch' : ''}" data-id="${b.id}" ondblclick="showRunsInfo(${b.id})" onclick="selectBlockFromList(${b.id})">
             <div class="text-label">
-                ${icon} 🏷️ [${idx+1}] Блок #${b.id} ${runBtn} 
+                ${icon} 🏷️ [${idx+1}] Блок #${b.id} ${runBtn}
                 ${mismatch ? `<span class="sep-warn">⚠️ |×${(currentTrans.match(/\|/g)||[]).length}≠${(b.runs?.length||1)-1}</span>` : ''}
                 <span style="cursor:pointer;" onclick="event.stopPropagation();cycleBlockMarker(${b.id})">🔖</span>
             </div>
-            
+
             <!-- Оригинал -->
             <div class="text-original-formatted">${origHtml}</div>
-            
+
             <!-- ПРЕДПРОСМОТР (перемещен сюда, под оригинал) -->
             <div class="text-label" style="margin-top:8px;">
                 <span style="font-size:11px;color:#64748b;">✨ Предпросмотр:</span>
             </div>
             <div class="text-translated-formatted"></div>
-            
+
             <!-- Перевод -->
             <div class="text-label" style="margin-top:12px;">
                 <span style="font-size:11px;color:#64748b;">✏️ Перевод ${isEdited ? '(изменен)' : '(можно редактировать)'}:</span>
@@ -2347,39 +2104,37 @@ if (orig.runs && orig.runs.length) {
                 </div>
             </div>
             <div class="text-translation">
-                <textarea 
-                    data-id="${b.id}" 
-                    data-original="${escapedApiTrans}" 
+                <textarea
+                    data-id="${b.id}"
+                    data-original="${escapedApiTrans}"
                     rows="1"
                     placeholder="Введите перевод. Используйте | для run'ов. [2,1,3] для перестановки."
                 >${escapedCurrentTrans}</textarea>
             </div>
         </div>`;
          });
-    
+
     c.innerHTML = h;
-    
+
     // Привязываем обработчики к textarea
     c.querySelectorAll('.text-translation textarea').forEach(ta => {
         const id = +ta.dataset.id;
-        ta.style.height = 'auto'; 
+        ta.style.height = 'auto';
         ta.style.height = Math.max(60, ta.scrollHeight) + 'px';
-        
+
         ta.addEventListener('input', e => {
             const val = e.target.value;
-            
+
             if (!AppState.allTranslations[AppState.currentSlide]) AppState.allTranslations[AppState.currentSlide] = {};
             if (!AppState.allTranslations[AppState.currentSlide][id]) AppState.allTranslations[AppState.currentSlide][id] = {};
-            
-            AppState.allTranslations[AppState.currentSlide][id].variant_1_translation = val;
-            AppState.allTranslations[AppState.currentSlide][id].variant_1_source = 'manual';
-            AppState.translations[id] = val;
-            
-            e.target.style.height = 'auto'; 
+
+            setSelectedTranslation(id, val);
+
+            e.target.style.height = 'auto';
             e.target.style.height = Math.min(200, Math.max(60, e.target.scrollHeight)) + 'px';
-            e.target.style.overflowY = 'hidden'; 
+            e.target.style.overflowY = 'hidden';
             updateSingleBlockPreview(id, val);
-            
+
             // Обновляем индикатор изменений
             const apiOriginal = e.target.getAttribute('data-original');
             if (val !== apiOriginal) {
@@ -2416,7 +2171,7 @@ if (orig.runs && orig.runs.length) {
             let val = e.target.value;
             let newVal = '';
             let openQuote = true;
-            
+
             for (let i = 0; i < val.length; i++) {
                 const ch = val[i];
                 if (ch === '"') {
@@ -2426,20 +2181,19 @@ if (orig.runs && orig.runs.length) {
                     newVal += ch;
                 }
             }
-            
+
             if (newVal !== val) {
                 e.target.value = newVal;
-                
+
                 // Обновляем данные
                 if (!AppState.allTranslations[AppState.currentSlide]) AppState.allTranslations[AppState.currentSlide] = {};
                 if (!AppState.allTranslations[AppState.currentSlide][id]) AppState.allTranslations[AppState.currentSlide][id] = {};
-                
-                AppState.allTranslations[AppState.currentSlide][id].variant_1_translation = newVal;
-                AppState.translations[id] = newVal;
-                
+
+                setSelectedTranslation(id, newVal);
+
                 // Обновляем предпросмотр
                 updateSingleBlockPreview(id, newVal);
-                
+
                 // Обновляем индикатор
                 const apiOriginal = e.target.getAttribute('data-original');
                 if (newVal !== apiOriginal) {
@@ -2448,40 +2202,36 @@ if (orig.runs && orig.runs.length) {
                     e.target.style.borderLeft = '';
                 }
             }
+            syncTranslationsToServer().catch(error => showStatus(error.message, 'error'));
         });
-        
+
     });
-    
+
     // Обновляем предпросмотр для всех блоков
-    ordered.forEach(b => { 
-        if (AppState.translations[b.id]) {
-            updateSingleBlockPreview(b.id, AppState.translations[b.id]);
-        } else if (AppState.allTranslations[AppState.currentSlide]?.[b.id]?.variant_1_translation) {
-            updateSingleBlockPreview(b.id, AppState.allTranslations[AppState.currentSlide][b.id].variant_1_translation);
-        }
+    ordered.forEach(b => {
+        const trans = AppState.allTranslations[AppState.currentSlide]?.[b.id] || {};
+        const value = getPriorityTranslation(trans, getSelectedVariantId(b.id));
+        if (value) updateSingleBlockPreview(b.id, value);
     });
 }
 
 function resetToApiVariant(blockId) {
-    const textarea = document.querySelector(`.text-translation textarea[data-id="${blockId}"]`);
-    if (!textarea) return;
-    
-    const originalVal = textarea.getAttribute('data-original');
-    if (originalVal && originalVal !== 'null' && originalVal !== 'undefined') {
-        textarea.value = originalVal;
-        textarea.style.borderLeft = '';
-        textarea.dispatchEvent(new Event('input', { bubbles: true }));
-        
-        // Обновляем индикатор в лейбле
-        const label = textarea.closest('.text-item').querySelector('.text-label:last-of-type span');
-        if (label) {
-            label.textContent = '✏️ Корректируемый вариант (совпадает с API):';
-        }
-        
-        showStatus('✅ Сброшено к варианту API', 'success');
-    } else {
-        showStatus('⚠️ Нет исходного варианта API для сброса', 'warning');
+    const trans = AppState.allTranslations[AppState.currentSlide]?.[blockId];
+    if (!trans) return;
+    const variantId = getSelectedVariantId(blockId);
+    const baseKey = `${variantId}_api_translation`;
+    if (trans[baseKey] === undefined) {
+        showStatus('Нет сохранённого исходного варианта для сброса', 'warning');
+        return;
     }
+    trans[`${variantId}_translation`] = trans[baseKey];
+    trans[`${variantId}_source`] = trans[`${variantId}_api_source`] || 'api';
+    delete trans[baseKey];
+    delete trans[`${variantId}_api_source`];
+    AppState.translations[blockId] = trans[`${variantId}_translation`];
+    updateTextList();
+    syncTranslationsToServer().catch(error => showStatus(error.message, 'error'));
+    showStatus('✅ Исходный вариант восстановлен', 'success');
 }
 
 function selectBlockFromList(id) {
@@ -2497,21 +2247,21 @@ function renderSlidesBar() {
         container.innerHTML = '<div style="text-align:center;padding:40px;">Загрузите презентацию</div>';
         return;
     }
-    
+
     let html = '';
     for (let i = 0; i < AppState.totalSlides; i++) {
         const hasTranslation = AppState.allTranslations[i] && Object.keys(AppState.allTranslations[i]).length > 0;
         const status = hasTranslation ? 'translated' : 'pending';
         const active = i === AppState.currentSlide ? 'active' : '';
-        
+
         // Если превью ещё генерируются — показываем плейсхолдер
         const imgSrc = previewGenerationInProgress ? '' : `/api/image/${AppState.session}/${i}`;
-        
+
         html += `
             <div class="slide-item ${active}" data-slide="${i}">
                 <div class="slide-preview">
-                    ${imgSrc ? 
-                        `<img src="${imgSrc}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : 
+                    ${imgSrc ?
+                        `<img src="${imgSrc}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` :
                         ''}
                     <div class="placeholder" style="${imgSrc ? 'display:none;' : 'display:flex;'} width:100%;height:100%;align-items:center;justify-content:center;">📄</div>
                 </div>
@@ -2523,7 +2273,7 @@ function renderSlidesBar() {
         `;
     }
     container.innerHTML = html;
-    
+
     container.querySelectorAll('.slide-item').forEach(el => {
         el.addEventListener('click', () => {
             const s = +el.dataset.slide;
@@ -2535,9 +2285,9 @@ function renderSlidesBar() {
 // ============================================================
 // ЗАГРУЗКА СЛАЙДА
 // ============================================================
-async function loadSlide(idx) {
+async function loadSlide(idx, { quiet = false } = {}) {
     if (!AppState.session) return;
-    showStatus(`Загрузка слайда ${idx+1}...`, 'info');
+    if (!quiet) showStatus(`Загрузка слайда ${idx+1}...`, 'info');
     document.getElementById('slideCanvas').innerHTML = '<div style="padding:50px;">⏳</div>';
     try {
         const r = await fetch(`/api/slide/${AppState.session}/${idx}`); const d = await r.json();
@@ -2551,14 +2301,16 @@ async function loadSlide(idx) {
         if (!AppState.slidesProcessed[idx] && AppState.blocks.length) { applyAutoOrder(); AppState.slidesProcessed[idx] = true; if (AppState.settings.auto_topic) autoMarkTopic(); }
         AppState.order = AppState.allOrders[idx] ? [...AppState.allOrders[idx]] : AppState.blocks.map(b=>b.id);
         if (!AppState.allOrders[idx]) AppState.allOrders[idx] = [...AppState.order];
-        if (AppState.allTranslations[idx]) {
-            AppState.translations = {};
-            for (const [id, t] of Object.entries(AppState.allTranslations[idx])) {
-                AppState.translations[id] = typeof t === 'object' ? (t.variant_1_translation || '') : t;
-            }
+        await loadMarkersFromServer();
+        await loadAreasFromServer();
+        await loadSelectedVariants();
+        AppState.translations = {};
+        for (const [id, t] of Object.entries(AppState.allTranslations[idx] || {})) {
+            AppState.translations[id] = typeof t === 'object'
+                ? getPriorityTranslation(t, getSelectedVariantId(id, idx))
+                : t;
         }
-        else { AppState.translations = {}; AppState.allTranslations[idx] = {}; }
-        await loadMarkersFromServer(); await loadAreasFromServer(); await loadSelectedVariants();
+        AppState.allTranslations[idx] ||= {};
         AppState.blocks = AppState.order.map(id => AppState.allBlocksCache[idx].find(b=>b.id===id)).filter(b=>b).map(b=>JSON.parse(JSON.stringify(b)));
         renderSlide(); updateTextList(); renderSlidesBar(); renderAreasList();
         console.log(`✅ Слайд ${idx+1} загружен`);
@@ -2583,290 +2335,112 @@ async function loadSelectedVariants() {
     try { const r = await fetch(`/api/get_selected_variants/${AppState.session}/${AppState.currentSlide}`); const d = await r.json(); if (d.selected_variants) AppState.selectedVariants[AppState.currentSlide] = d.selected_variants; } catch(e) {}
 }
 function showVariantsModal(blockId) {
-    const block = AppState.blocks.find(b => b.id === blockId);
+    const block = AppState.blocks.find(item => item.id === blockId);
     if (!block) return;
-    
+    const originalBlock = AppState.originalBlocksCache[AppState.currentSlide]?.find(item => item.id === blockId) || block;
+    const originalText = originalBlock.runs?.length > 1
+        ? originalBlock.runs.map(run => run.text).join(' | ')
+        : originalBlock.text || '';
     const trans = AppState.allTranslations[AppState.currentSlide]?.[blockId] || {};
-    const variants = AppState.translationVariants || [];
-    const enabledVariants = variants.filter(v => v.enabled !== false);
-    
-    const sel = AppState.selectedVariants?.[AppState.currentSlide]?.[blockId] || 'variant_1';
-    
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.style.display = 'flex';
-    
-    let html = `<div class="modal-content" style="min-width:500px;"><h3>📊 Варианты для блока #${blockId}</h3>`;
-    
-    if (enabledVariants.length === 0) {
-        html += '<div style="padding:20px;text-align:center;">Нет доступных вариантов</div>';
-    } else {
-        enabledVariants.forEach(v => {
-            const translation = trans[`${v.id}_translation`] || '';
-            const isSelected = sel === v.id;
-            html += `
-                <div style="border:1px solid ${isSelected ? '#10b981' : '#e2e8f0'};padding:12px;margin-bottom:12px;border-radius:12px;background:${isSelected ? '#f0fdf4' : 'white'}">
-                    <div style="display:flex;justify-content:space-between;align-items:center;">
-                        <strong>${escapeHtml(v.name)} (${v.code || v.id})</strong>
-                        ${isSelected ? '<span style="background:#10b981;color:white;padding:2px 8px;border-radius:20px;font-size:10px;">✓ Выбран</span>' : ''}
-                    </div>
-                    <div style="font-size:11px;color:#64748b;margin:4px 0;">${escapeHtml(v.description || '')}</div>
-                    <div style="padding:8px;background:#f8fafc;border-radius:8px;margin:8px 0;">${escapeHtml(translation) || '<span style="color:#999">(нет перевода)</span>'}</div>
-                    <button class="select-variant" data-id="${blockId}" data-variant="${v.id}" style="background:#3b82f6;color:white;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;">📌 Выбрать</button>
-                </div>
-            `;
-        });
-    }
-    
-    html += '<div class="modal-buttons"><button class="close-variant-modal btn-secondary">Закрыть</button></div></div>';
-    modal.innerHTML = html;
-    document.body.appendChild(modal);
-    
-    modal.querySelectorAll('.select-variant').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const bid = btn.dataset.id;
-            const vid = btn.dataset.variant;
-            
-            if (!AppState.selectedVariants[AppState.currentSlide]) {
-                AppState.selectedVariants[AppState.currentSlide] = {};
-            }
-            AppState.selectedVariants[AppState.currentSlide][bid] = vid;
-            
-            // Сохраняем на сервер
-            try {
-                await fetch(`/api/save_selected_variant/${AppState.session}/${AppState.currentSlide}/${bid}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ variant_id: vid })
-                });
-            } catch (e) {
-                console.error('Ошибка сохранения:', e);
-            }
-            
-            // Обновляем textarea
-            const ta = document.querySelector(`.text-translation textarea[data-id="${bid}"]`);
-            if (ta) {
-                const newTrans = AppState.allTranslations[AppState.currentSlide]?.[bid]?.[`${vid}_translation`] || '';
-                ta.value = newTrans;
-                ta.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-            
-            modal.remove();
-            showStatus(`✅ Выбран вариант: ${vid}`, 'success');
-        });
-    });
-    
-    modal.querySelector('.close-variant-modal').onclick = () => modal.remove();
-    modal.onclick = e => { if (e.target === modal) modal.remove(); };
-}
+    let selectedVariantId = getSelectedVariantId(blockId);
+    const variants = (AppState.translationVariants || []).filter(variant =>
+        variant.enabled !== false || variant.id === selectedVariantId || trans[`${variant.id}_translation`] !== undefined
+    );
 
-function showVariantsModal(blockId) {
-    const block = AppState.blocks.find(b => b.id === blockId);
-    if (!block) return;
-    
-    // Исходный текст (оригинал)
-    let originalText = block.text;
-    if (block.runs && block.runs.length > 1) {
-        originalText = block.runs.map(r => r.text).join(' | ');
-    }
-    
-    const trans = AppState.allTranslations[AppState.currentSlide]?.[blockId] || {};
-    const variants = AppState.translationVariants || [];
-    const enabledVariants = variants.filter(v => v.enabled !== false);
-    
-    // Текущий выбранный вариант (ID)
-    let selectedVariantId = AppState.selectedVariants?.[AppState.currentSlide]?.[blockId] || 'variant_1';
-    // Если выбранного нет, но есть перевод variant_1, используем его
-    if (!selectedVariantId && trans.variant_1_translation) selectedVariantId = 'variant_1';
-    
-    // Текущий редактируемый текст (то, что в textarea основного интерфейса)
-    let currentEditText = trans[`${selectedVariantId}_translation`] || '';
-    
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.style.display = 'flex';
-    
-    let html = `
-        <div class="modal-content" style="min-width:800px; max-width:1100px;">
-            <!-- КНОПКИ ВВЕРХУ -->
-            <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid #e2e8f0;">
+    modal.innerHTML = `
+        <div class="modal-content" style="min-width:min(800px, 90vw);max-width:1100px;">
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:16px;">
                 <button id="saveVariantBtn" class="btn-primary">💾 Сохранить и закрыть</button>
-                <button id="cancelVariantBtn" class="btn-secondary">❌ Отмена</button>
+                <button id="cancelVariantBtn" class="btn-secondary">Отмена</button>
             </div>
-            
-            <h3 style="margin-top:0; margin-bottom:16px;">📝 Редактор перевода — блок #${blockId}</h3>
-            
-            <!-- Исходный текст -->
-            <div style="margin-bottom:16px;">
-                <div class="text-label" style="margin-bottom:4px;">📖 Оригинал:</div>
-                <div style="padding:10px; background:#f1f5f9; border-radius:8px; font-size:13px;">${escapeHtml(originalText)}</div>
-            </div>
-            
-            <!-- Редактируемый перевод -->
-            <div style="margin-bottom:16px;">
-                <div class="text-label" style="margin-bottom:4px;">✏️ Редактируемый перевод:</div>
-                <textarea id="variantEditTextarea" rows="4" style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:8px; font-family:monospace;">${escapeHtml(currentEditText)}</textarea>
-            </div>
-            
-            <!-- Список альтернативных стилей (вариантов) -->
-            <div style="margin-bottom:16px;">
-                <div class="text-label" style="margin-bottom:8px;">🎨 Другие стили перевода:</div>
-                <div id="variantsListModal" style="max-height:500px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:8px; padding:8px;">
-    `;
-    
-    if (enabledVariants.length === 0) {
-        html += '<div style="padding:20px; text-align:center;">Нет доступных вариантов</div>';
-    } else {
-        enabledVariants.forEach(v => {
-            const translation = trans[`${v.id}_translation`] || '';
-            const isSelected = (selectedVariantId === v.id);
-            html += `
-                <div class="variant-item" data-variant-id="${v.id}" style="border:1px solid ${isSelected ? '#10b981' : '#e2e8f0'}; padding:10px; margin-bottom:8px; border-radius:8px; cursor:pointer; background:${isSelected ? '#f0fdf4' : 'white'};">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <strong>${escapeHtml(v.name)} (${v.code || v.id})</strong>
-                        ${isSelected ? '<span style="background:#10b981; color:white; padding:2px 8px; border-radius:20px; font-size:10px;">✓ Активный</span>' : ''}
-                    </div>
-                    <div style="font-size:11px; color:#64748b; margin:4px 0;">${escapeHtml(v.description || '')}</div>
-                    <div style="padding:6px; background:#f8fafc; border-radius:6px; margin-top:6px; font-size:12px;">${escapeHtml(translation) || '<span style="color:#999;">(нет перевода)</span>'}</div>
-                </div>
-            `;
-        });
-    }
-    
-    html += `
-                </div>
-            </div>
-        </div>
-    `;
-    
-    modal.innerHTML = html;
+            <h3>📝 Перевод — блок #${blockId}</h3>
+            <div class="text-label">📖 Оригинал:</div>
+            <div style="padding:10px;background:#f1f5f9;border-radius:8px;margin:6px 0 16px;">${escapeHtml(originalText)}</div>
+            <div class="text-label">✏️ Активный перевод:</div>
+            <textarea id="variantEditTextarea" rows="4" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;">${escapeHtml(trans[`${selectedVariantId}_translation`] || '')}</textarea>
+            <div class="text-label" style="margin:16px 0 8px;">🎨 Стили перевода:</div>
+            <div id="variantsListModal" style="max-height:500px;overflow-y:auto;"></div>
+        </div>`;
     document.body.appendChild(modal);
-    
-    // Переменная для хранения выбранного ID варианта (синхронизация)
-    let currentSelectedId = selectedVariantId;
-    
-    // Функция обновления выделения в списке вариантов
-    function updateVariantSelection(selectedId) {
-        document.querySelectorAll('.variant-item').forEach(item => {
-            const vid = item.dataset.variantId;
-            if (vid === selectedId) {
-                item.style.borderColor = '#10b981';
-                item.style.background = '#f0fdf4';
-                // Обновляем метку
-                let badge = item.querySelector('.variant-badge');
-                if (!badge) {
-                    const newBadge = document.createElement('span');
-                    newBadge.className = 'variant-badge';
-                    newBadge.style.cssText = 'background:#10b981; color:white; padding:2px 8px; border-radius:20px; font-size:10px; margin-left:8px;';
-                    newBadge.innerText = '✓ Активный';
-                    const titleDiv = item.querySelector('div:first-child');
-                    if (titleDiv) titleDiv.appendChild(newBadge);
-                }
-            } else {
-                item.style.borderColor = '#e2e8f0';
-                item.style.background = 'white';
-                const badge = item.querySelector('.variant-badge');
-                if (badge) badge.remove();
-            }
-        });
+
+    const drafts = { [selectedVariantId]: trans[`${selectedVariantId}_translation`] || '' };
+    const list = modal.querySelector('#variantsListModal');
+    function renderList() {
+        list.innerHTML = variants.length ? variants.map(variant => {
+            const selected = variant.id === selectedVariantId;
+            const value = drafts[variant.id] ?? trans[`${variant.id}_translation`] ?? '';
+            return `<div class="variant-item" data-variant-id="${escapeHtml(variant.id)}" style="border:1px solid ${selected ? '#10b981' : '#e2e8f0'};padding:10px;margin-bottom:8px;border-radius:8px;cursor:pointer;background:${selected ? '#f0fdf4' : 'white'};">
+                <strong>${escapeHtml(variant.name)} (${escapeHtml(variant.code || variant.id)})</strong>
+                ${selected ? '<span style="background:#10b981;color:white;padding:2px 8px;border-radius:20px;font-size:10px;margin-left:8px;">✓ Активный</span>' : ''}
+                <div style="font-size:11px;color:#64748b;margin:4px 0;">${escapeHtml(variant.description || '')}</div>
+                <div style="padding:6px;background:#f8fafc;border-radius:6px;margin-top:6px;font-size:12px;">${escapeHtml(value) || '<span style="color:#999">(нет перевода)</span>'}</div>
+            </div>`;
+        }).join('') : '<div style="padding:20px;text-align:center;">Нет доступных вариантов</div>';
+        list.querySelectorAll('.variant-item').forEach(item => item.addEventListener('click', () => {
+            drafts[selectedVariantId] = modal.querySelector('#variantEditTextarea').value;
+            selectedVariantId = item.dataset.variantId;
+            const value = drafts[selectedVariantId] ?? trans[`${selectedVariantId}_translation`] ?? '';
+            modal.querySelector('#variantEditTextarea').value = value;
+            renderList();
+        }));
     }
-    
-    // Обработчик клика по варианту: загружаем его перевод в textarea и меняем выделение
-    document.querySelectorAll('.variant-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const variantId = item.dataset.variantId;
-            if (!variantId) return;
-            currentSelectedId = variantId;
-            // Загружаем перевод этого варианта в textarea
-            const translation = trans[`${variantId}_translation`] || '';
-            document.getElementById('variantEditTextarea').value = translation;
-            updateVariantSelection(variantId);
-        });
-    });
-    
-    // Кнопка сохранения
-    document.getElementById('saveVariantBtn').addEventListener('click', async () => {
-        const newTranslation = document.getElementById('variantEditTextarea').value;
-        const selectedId = currentSelectedId;
-        const originalApiTranslation = trans[`${selectedId}_translation`] || '';
-        
-        // Определяем источник: если текст НЕ изменен пользователем в textarea
-        const isUserEdited = (newTranslation !== originalApiTranslation);
-        
-        if (!AppState.allTranslations[AppState.currentSlide]) {
-            AppState.allTranslations[AppState.currentSlide] = {};
+    renderList();
+
+    modal.querySelector('#saveVariantBtn').addEventListener('click', async () => {
+        const newTranslation = modal.querySelector('#variantEditTextarea').value;
+        const slideTrans = AppState.allTranslations[AppState.currentSlide] ||= {};
+        const target = slideTrans[blockId] ||= {};
+        const previous = target[`${selectedVariantId}_translation`];
+        const previousSource = target[`${selectedVariantId}_source`] || 'api';
+        if (newTranslation !== previous && previousSource !== 'manual' && previous !== undefined) {
+            target[`${selectedVariantId}_api_translation`] = previous;
+            target[`${selectedVariantId}_api_source`] = previousSource;
         }
-        if (!AppState.allTranslations[AppState.currentSlide][blockId]) {
-            AppState.allTranslations[AppState.currentSlide][blockId] = {};
-        }
-        
-        AppState.allTranslations[AppState.currentSlide][blockId][`${selectedId}_translation`] = newTranslation;
-        
-        // Сохраняем источник: 'api' если не редактировалось, 'manual' если редактировалось
-        AppState.allTranslations[AppState.currentSlide][blockId][`${selectedId}_source`] = 'api';
-        
-        // Если это variant_1, обновляем также AppState.translations для текущего слайда
-        if (selectedId === 'variant_1') {
-            AppState.translations[blockId] = newTranslation;
-        }
-        
-        // Сохраняем выбранный вариант
-        if (!AppState.selectedVariants[AppState.currentSlide]) {
-            AppState.selectedVariants[AppState.currentSlide] = {};
-        }
-        AppState.selectedVariants[AppState.currentSlide][blockId] = selectedId;
-        
-        // Отправляем на сервер
+        target[`${selectedVariantId}_translation`] = newTranslation;
+        target[`${selectedVariantId}_source`] = newTranslation === previous ? previousSource : 'manual';
+        AppState.selectedVariants[AppState.currentSlide] ||= {};
+        AppState.selectedVariants[AppState.currentSlide][blockId] = selectedVariantId;
+        AppState.translations[blockId] = newTranslation;
+
         try {
-            await fetch(`/api/save_selected_variant/${AppState.session}/${AppState.currentSlide}/${blockId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ variant_id: selectedId })
+            const response = await fetch(`/api/save_selected_variant/${AppState.session}/${AppState.currentSlide}/${blockId}`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ variant_id: selectedVariantId })
             });
-        } catch(e) { console.error(e); }
-        
-        // Обновляем текстовое поле в основном интерфейсе
-        const mainTextarea = document.querySelector(`.text-translation textarea[data-id="${blockId}"]`);
-        if (mainTextarea) {
-            mainTextarea.value = newTranslation;
-            mainTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+            if (!response.ok) throw new Error('Не удалось сохранить выбранный стиль');
+            await syncTranslationsToServer();
+            updateTextList();
+            modal.remove();
+            showStatus('✅ Выбранный перевод сохранён', 'success');
+        } catch (error) {
+            showStatus(error.message, 'error');
         }
-        
-        // Обновляем предпросмотр
-        updateSingleBlockPreview(blockId, newTranslation);
-        
-        modal.remove();
-        showStatus(`✅ Перевод для "${selectedId}" сохранён`, 'success');
     });
-    
-    document.getElementById('cancelVariantBtn').addEventListener('click', () => {
-        modal.remove();
-    });
-    
-    // Закрытие по клику на фон
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
-    });
-    
-    // Инициализируем выделение
-    updateVariantSelection(currentSelectedId);
+    modal.querySelector('#cancelVariantBtn').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', event => { if (event.target === modal) modal.remove(); });
 }
 
 // ============================================================
 // RUN'Ы
 // ============================================================
-async function showRunsInfo(id) {
-    const b = AppState.blocks.find(b=>b.id===id); if (!b?.runs) return;
-    let h = '<div style="max-height:500px;">';
-    b.runs.forEach((r, i) => {
-        const f = r.formatting || {}; const info = [];
-        if (f.bold) info.push('Жирный'); if (f.italic) info.push('Курсив'); if (f.underline) info.push('Подчеркнутый'); if (f.color) info.push(`Цвет:#${f.color}`);
-        h += `<div class="run-item"><div style="display:flex;"><div style="flex:1;"><strong>Фрагмент ${i+1}</strong><div style="margin:6px 0;padding:8px;background:#f1f5f9;" id="run-text-${id}-${i}">${escapeHtml(r.text)}</div><div class="small">${info.join(' • ')||'Обычный'}</div></div>
-            <button class="btn-secondary" onclick="showAbbreviateOptions(${id},${i},'${escapeHtml(r.text)}')" style="margin-left:12px;">✂️ Сократить</button></div>
-            <div id="abbreviate-options-${id}-${i}" class="abbreviate-options" style="display:none;"></div></div>`;
-    });
-    document.getElementById('runsInfoContent').innerHTML = h + '</div>';
+function showRunsInfo(id) {
+    const block = AppState.blocks.find(item => item.id === id);
+    if (!block?.runs) return;
+    const html = block.runs.map((run, index) => {
+        const format = run.formatting || {};
+        const info = [];
+        if (format.bold) info.push('Жирный');
+        if (format.italic) info.push('Курсив');
+        if (format.underline) info.push('Подчёркнутый');
+        if (format.color) info.push(`Цвет: #${format.color}`);
+        return `<div class="run-item"><strong>Фрагмент ${index + 1}</strong>
+            <div style="margin:6px 0;padding:8px;background:#f1f5f9;">${escapeHtml(run.text)}</div>
+            <div class="small">${escapeHtml(info.join(' • ') || 'Обычный')}</div></div>`;
+    }).join('');
+    document.getElementById('runsInfoContent').innerHTML = `<div style="max-height:500px;">${html}</div>`;
     document.getElementById('runsInfoModal').style.display = 'flex';
 }
 function showRunOrderModal(id) {
@@ -2878,26 +2452,6 @@ function showRunOrderModal(id) {
     document.getElementById('runOrderTextArea').value = m ? m[2] : cur;
     document.getElementById('runOrderModal').style.display = 'flex';
 }
-async function showAbbreviateOptions(bid, ridx, word) {
-    const d = document.getElementById(`abbreviate-options-${bid}-${ridx}`);
-    if (d.dataset.loaded === 'true') { d.style.display = d.style.display === 'none' ? 'block' : 'none'; return; }
-    d.style.display = 'block'; d.innerHTML = '<div style="padding:20px;">⏳</div>';
-    try {
-        const r = await fetch('/api/abbreviate_word', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({word}) });
-        const data = await r.json(); if (!r.ok) throw new Error(data.error);
-        let h = `<div><strong>📝 ${escapeHtml(word)}</strong></div><div>🔤 ${data.syllables.join(' - ')}</div><div style="display:flex;flex-wrap:wrap;gap:8px;">`;
-        data.variants.forEach((v,i) => h += `<button class="variant-option-btn ${i===0?'original':''}" onclick="applyAbbreviation(${bid},${ridx},'${escapeHtml(v)}');document.getElementById('abbreviate-options-${bid}-${ridx}').style.display='none';">${escapeHtml(v)}</button>`);
-        h += '</div><button class="btn-secondary" onclick="document.getElementById(\'abbreviate-options-${bid}-${ridx}\').style.display=\'none\';">Отмена</button>';
-        d.innerHTML = h; d.dataset.loaded = 'true';
-    } catch(e) { d.innerHTML = `<div style="color:#ef4444;">❌ ${e.message}</div>`; }
-}
-function applyAbbreviation(bid, ridx, txt) {
-    const b = AppState.blocks.find(b=>b.id===bid); if (b?.runs?.[ridx]) { b.runs[ridx].text = txt; b.text = b.runs.map(r=>r.text).join(' '); }
-    document.getElementById(`run-text-${bid}-${ridx}`).textContent = txt;
-    const t = AppState.translations[bid]; if (t) { const p = t.split('|').map(p=>p.trim()); if (ridx < p.length) { p[ridx] = txt; AppState.translations[bid] = p.join(' | '); if (AppState.allTranslations[AppState.currentSlide]?.[bid]) AppState.allTranslations[AppState.currentSlide][bid].variant_1_translation = p.join(' | '); } }
-    renderSlide(); updateTextList(); showStatus('✅ Обновлено', 'success');
-}
-
 // ============================================================
 // ПЕРЕВОД
 // ============================================================
@@ -2906,48 +2460,51 @@ async function applyTranslations() {
         showStatus('Нет активной сессии', 'error');
         return;
     }
-    
+
     // Берем переводы из allTranslations для текущего слайда
     const slideTrans = AppState.allTranslations[AppState.currentSlide] || {};
-    
+
     // Создаем список переводов в правильном порядке
     const translationsList = AppState.order.map(id => {
         const trans = slideTrans[id];
         if (trans && typeof trans === 'object') {
-            return trans.variant_1_translation || '';
+            return getPriorityTranslation(trans, getSelectedVariantId(id));
         }
         return '';
     });
-    
+
     const nonEmptyCount = translationsList.filter(t => t && t.trim()).length;
     console.log(`📝 Отправляю ${nonEmptyCount} переводов из ${translationsList.length} блоков`);
-    
+
     if (nonEmptyCount === 0) {
         showStatus('Нет переводов для применения', 'error');
         return;
     }
-    
+
     showStatus(`Применяю ${nonEmptyCount} переводов...`, 'info');
-    
+
     try {
+        await syncTranslationsToServer();
         const response = await fetch(`/api/apply/${AppState.session}/${AppState.currentSlide}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                order: AppState.order, 
-                translations: translationsList 
+            body: JSON.stringify({
+                order: AppState.order,
+                translations: translationsList
             })
         });
-        
+
         const data = await response.json();
-        
-        if (data.success) {
-            showStatus(`✅ Применено ${nonEmptyCount} переводов`, 'success');
-            // Перезагружаем слайд, чтобы увидеть изменения
-            await loadSlide(AppState.currentSlide);
-        } else {
-            showStatus(`❌ Ошибка применения: ${data.error || 'неизвестная ошибка'}`, 'error');
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.error || (data.errors || []).join('; ') || 'Не удалось применить переводы');
         }
+        if (data.partial) {
+            showStatus(`⚠️ Применено ${data.applied_blocks}; ошибки: ${(data.errors || []).join('; ')}`, 'warning');
+        } else {
+            showStatus(`✅ Применено ${data.applied_blocks} переводов`, 'success');
+        }
+        await loadSlide(AppState.currentSlide, { quiet: true });
     } catch (e) {
         console.error('Apply error:', e);
         showStatus(`❌ Ошибка: ${e.message}`, 'error');
@@ -2972,39 +2529,39 @@ function exportAllTranslations() {
 }
 function exportAppliedTranslation() {
     if (!AppState.session) return;
-    
+
     const slideTrans = AppState.allTranslations[AppState.currentSlide] || {};
     let output = `# ПРИМЕНЁННЫЙ ПЕРЕВОД — СЛАЙД ${AppState.currentSlide + 1}\n`;
     output += `# Дата: ${new Date().toLocaleString()}\n\n`;
-    
+
     AppState.order.forEach((id, i) => {
         const block = AppState.blocks.find(b => b.id === id);
         if (!block) return;
-        
+
         let orig = block.text;
         if (block.runs?.length > 1) {
             orig = block.runs.map(r => r.text).join(' | ');
         }
         output += `[${i + 1}] ${orig}\n`;
-        
+
         // Ищем выбранный вариант
         const selectedVariant = AppState.selectedVariants?.[AppState.currentSlide]?.[id] || 'variant_1';
         const trans = slideTrans[id]?.[`${selectedVariant}_translation`] || AppState.translations[id] || '';
-        
+
         // Определяем количество апострофов
         const variantNum = parseInt(selectedVariant.replace('variant_', '')) || 1;
         const quotes = "'".repeat(variantNum);
-        
+
         output += `[${i + 1}${quotes}] ${trans}\n\n`;
     });
-    
+
     const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `applied_slide_${AppState.currentSlide + 1}.txt`;
     a.click();
     URL.revokeObjectURL(a.href);
-    
+
     showStatus('✅ Применённый перевод экспортирован', 'success');
 
 }
@@ -3040,7 +2597,7 @@ function loadManualDraft() { const s = localStorage.getItem(MANUAL_DRAFT); if (!
 function clearManualDraft() { localStorage.removeItem(MANUAL_DRAFT); }
 function loadManualTranslationsToEditor() {
     const lines = [];
-    
+
     // Получаем ТОЛЬКО включенные варианты, сохраняя их исходные ID и номера кавычек
     const enabledVariants = (AppState.translationVariants || [])
         .filter(v => v.enabled !== false)
@@ -3049,41 +2606,41 @@ function loadManualTranslationsToEditor() {
             quoteCount: parseInt(v.id.replace('variant_', '')) || 1,
             name: v.name
         }));
-    
+
     console.log('Включенные варианты для редактора:', enabledVariants);
-    
+
     // Получаем маркеры для текущего слайда
     const slideMarkers = AppState.slideMarkers[AppState.currentSlide] || {};
-    
+
     AppState.order.forEach((id, i) => {
         const b = AppState.blocks.find(b => b.id === id);
         if (!b) return;
-        
+
         let orig = b.text;
         if (b.runs?.length > 1) {
             orig = b.runs.map(r => r.text).join(' | ');
         }
-        
+
         // Добавляем маркер перед оригиналом
         const marker = slideMarkers[id];
         let markerPrefix = '';
         if (marker === 'topic') markerPrefix = '📌 [ТОПИК] ';
         else if (marker === 'subtopic') markerPrefix = '📄 [ПОДТОПИК] ';
-        
+
         lines.push(`[${i+1}] ${markerPrefix}${orig}`);
-        
+
         // Добавляем переводы для ВКЛЮЧЕННЫХ вариантов с ИСХОДНЫМ количеством кавычек
         const t = AppState.allTranslations[AppState.currentSlide]?.[id] || {};
-        
+
         enabledVariants.forEach(variant => {
             const translation = t[`${variant.id}_translation`] || '';
             const quotes = "'".repeat(variant.quoteCount);
             lines.push(`[${i+1}${quotes}] ${translation}`);
         });
-        
+
         lines.push('');
     });
-    
+
     const textarea = document.getElementById('manualEditorTextArea');
     textarea.value = lines.join('\n');
     document.getElementById('manualEditorSlideNum').textContent = AppState.currentSlide + 1;
@@ -3092,7 +2649,7 @@ function loadManualTranslationsToEditor() {
 function applyManualTranslationsFromEditor() {
     const text = document.getElementById('manualEditorTextArea').value;
     const lines = text.split('\n');
-    
+
     // Получаем ВКЛЮЧЕННЫЕ варианты с их исходными номерами кавычек
     const enabledVariants = (AppState.translationVariants || [])
         .filter(v => v.enabled !== false)
@@ -3100,29 +2657,29 @@ function applyManualTranslationsFromEditor() {
             id: v.id,
             quoteCount: parseInt(v.id.replace('variant_', '')) || 1
         }));
-    
+
     if (enabledVariants.length === 0) {
         showStatus('Нет включенных вариантов перевода', 'error');
         return;
     }
-    
+
     const newTrans = {};
     const newMarkers = {};
     let curIdx = null;
     let curVariantIndex = null;
     let curText = [];
-    
+
     // Функция для поиска варианта по количеству кавычек
     function findVariantByQuoteCount(quoteCount) {
         return enabledVariants.find(v => v.quoteCount === quoteCount);
     }
-    
+
     for (const line of lines) {
         // Проверка маркера ТОПИК
         const markerTopicMatch = line.match(/^\[(\d+)\]\s*📌\s*\[ТОПИК\]\s*(.*)/);
         const markerSubtopicMatch = line.match(/^\[(\d+)\]\s*📄\s*\[ПОДТОПИК\]\s*(.*)/);
         const mOrig = line.match(/^\[(\d+)\]\s*(.*)/);
-        
+
         if (markerTopicMatch) {
             if (curIdx !== null && curText.length && curVariantIndex !== null) {
                 const variant = enabledVariants[curVariantIndex];
@@ -3137,7 +2694,7 @@ function applyManualTranslationsFromEditor() {
             curText = [];
             continue;
         }
-        
+
         if (markerSubtopicMatch) {
             if (curIdx !== null && curText.length && curVariantIndex !== null) {
                 const variant = enabledVariants[curVariantIndex];
@@ -3152,7 +2709,7 @@ function applyManualTranslationsFromEditor() {
             curText = [];
             continue;
         }
-        
+
         if (mOrig) {
             if (curIdx !== null && curText.length && curVariantIndex !== null) {
                 const variant = enabledVariants[curVariantIndex];
@@ -3166,7 +2723,7 @@ function applyManualTranslationsFromEditor() {
             curText = [];
             continue;
         }
-        
+
         // Парсим вариант перевода по количеству кавычек
         const mTrans = line.match(/^\[(\d+)('+)\]\s*(.*)/);
         if (mTrans) {
@@ -3189,12 +2746,12 @@ function applyManualTranslationsFromEditor() {
             curText = [mTrans[3] || ''];
             continue;
         }
-        
+
         if (curIdx !== null && curVariantIndex !== null) {
             curText.push(line);
         }
     }
-    
+
     // Сохраняем последний блок
     if (curIdx !== null && curText.length && curVariantIndex !== null) {
         const variant = enabledVariants[curVariantIndex];
@@ -3203,30 +2760,30 @@ function applyManualTranslationsFromEditor() {
             newTrans[curIdx][`${variant.id}_translation`] = curText.join('\n').trim();
         }
     }
-    
+
     // Применяем переводы
     let applied = 0;
     for (const [idx, varsTrans] of Object.entries(newTrans)) {
         const id = AppState.order[parseInt(idx) - 1];
         if (id === undefined) continue;
-        
+
         if (!AppState.allTranslations[AppState.currentSlide]) {
             AppState.allTranslations[AppState.currentSlide] = {};
         }
         if (!AppState.allTranslations[AppState.currentSlide][id]) {
             AppState.allTranslations[AppState.currentSlide][id] = {};
         }
-        
+
         for (const [varId, trans] of Object.entries(varsTrans)) {
             AppState.allTranslations[AppState.currentSlide][id][varId] = trans;
             AppState.allTranslations[AppState.currentSlide][id][varId.replace('_translation', '_source')] = 'manual';
-            if (varId === 'variant_1_translation') {
+            if (varId === `${getSelectedVariantId(id)}_translation`) {
                 AppState.translations[id] = trans;
             }
             applied++;
         }
     }
-    
+
     // Применяем маркеры
     let markersApplied = 0;
     for (const [idx, markerType] of Object.entries(newMarkers)) {
@@ -3236,7 +2793,7 @@ function applyManualTranslationsFromEditor() {
             markersApplied++;
         }
     }
-    
+
     if (applied > 0 || markersApplied > 0) {
         updateTextList();
         renderSlide();
@@ -3252,13 +2809,13 @@ function applyManualTranslationsFromEditor() {
 function exportManualEditorToTxt() {
     const ta = document.getElementById('manualEditorTextArea');
     if (!ta.value.trim()) return;
-    
+
     // Добавляем заголовок с информацией о маркерах
     let content = `# РУЧНОЙ РЕДАКТОР - СЛАЙД ${AppState.currentSlide + 1}\n`;
     content += `# Маркеры: 📌 = ТОПИК, 📄 = ПОДТОПИК\n`;
     content += `# Формат: [N] 📌 [ТОПИК] текст\n\n`;
     content += ta.value;
-    
+
     const blob = new Blob([content], { type: 'text/plain' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -3314,31 +2871,31 @@ async function openSaveSessionModal() {
         showStatus('Нет активной сессии', 'error');
         return;
     }
-    
+
     const modal = document.getElementById('saveSessionModal');
     const existingDiv = document.getElementById('existingSessionsList');
     const newNameDiv = document.getElementById('newSessionNameDiv');
     const saveListDiv = document.getElementById('saveSessionsList');
-    
+
     // Скрываем лишние блоки
     existingDiv.style.display = 'none';
     newNameDiv.style.display = 'none';
-    
+
     modal.style.display = 'flex';
     saveListDiv.innerHTML = '<div style="text-align: center; padding: 20px;">⏳ Загрузка...</div>';
-    
+
     // Загружаем список существующих сессий
     try {
         const res = await fetch('/api/sessions/list');
         const data = await res.json();
         const sessions = data.sessions || [];
-        
+
         if (sessions.length === 0) {
             saveListDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #94a3b8;">Нет сохраненных сессий</div>';
         } else {
             let html = '<table style="width:100%; border-collapse: collapse;">';
             html += '<tr style="background: #f1f5f9;"><th>Название</th><th>Слайдов</th><th>Дата</th><th></th></tr>';
-            
+
             sessions.forEach(s => {
                 const date = s.saved_at ? new Date(s.saved_at).toLocaleString() : 'неизвестно';
                 html += `<tr style="border-bottom: 1px solid #e2e8f0;">
@@ -3361,17 +2918,18 @@ async function openSaveSessionModal() {
 // Перезаписать существующую сессию
 async function overwriteSession(folderName) {
     if (!confirm(`Перезаписать сессию "${folderName}"? Это действие нельзя отменить.`)) return;
-    
+
     showStatus(`💾 Перезапись сессии ${folderName}...`, 'info');
-    
+
     try {
+        await syncTranslationsToServer();
         const res = await fetch(`/api/sessions/save/${AppState.session}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: folderName, overwrite: true })
         });
         const data = await res.json();
-        
+
         if (data.success) {
             showStatus(`✅ Сессия "${folderName}" перезаписана`, 'success');
             document.getElementById('saveSessionModal').style.display = 'none';
@@ -3387,22 +2945,23 @@ async function overwriteSession(folderName) {
 async function saveAsNewSession() {
     const nameInput = document.getElementById('newSessionName');
     const customName = nameInput.value.trim();
-    
+
     if (!customName) {
         showStatus('Введите название сессии', 'error');
         return;
     }
-    
+
     showStatus(`💾 Сохранение сессии "${customName}"...`, 'info');
-    
+
     try {
+        await syncTranslationsToServer();
         const res = await fetch(`/api/sessions/save/${AppState.session}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: customName, overwrite: false })
         });
         const data = await res.json();
-        
+
         if (data.success) {
             showStatus(`✅ Сессия "${customName}" сохранена`, 'success');
             document.getElementById('saveSessionModal').style.display = 'none';
@@ -3423,18 +2982,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadSettings();
     await loadVariantsFromTxt();
     initResizeHandles();
-    
+
     document.getElementById('uploadBtn').onclick = () => document.getElementById('fileInput').click();
     document.getElementById('fileInput').onchange = async e => {
         const f = e.target.files[0]; if (!f) return; const fd = new FormData(); fd.append('file', f); showStatus('Загрузка...', 'info');
         try {
             const r = await fetch('/api/upload', {method:'POST', body:fd}); const d = await r.json();
-            if (r.ok) { AppState.session = d.session; AppState.totalSlides = d.total_slides; AppState.allOrders = {}; AppState.allTranslations = {}; AppState.allBlocksCache = {}; AppState.originalBlocksCache = {}; AppState.slideMarkers = {}; AppState.slideAreas = {}; stopPreviewStatusPolling(); await loadSlide(0); startPreviewStatusPolling(); showStatus('Загружено!', 'success'); }
+            if (r.ok) { AppState.session = d.session; AppState.totalSlides = d.total_slides; AppState.allOrders = {}; AppState.allTranslations = {}; AppState.allBlocksCache = {}; AppState.originalBlocksCache = {}; AppState.slideMarkers = {}; AppState.slideAreas = {}; AppState.selectedVariants = {}; AppState.slidesProcessed = {}; AppState.originalName = d.original_name; stopPreviewStatusPolling(); await loadSlide(0); startPreviewStatusPolling(); showStatus('Загружено!', 'success'); }
             else showStatus('Ошибка: '+d.error, 'error');
         } catch(e) { showStatus('Ошибка соединения', 'error'); }
     };
     setTimeout(adjustAllTextareasHeight, 500);
-    
+
 document.getElementById('translateSlidesBtn').onclick = () => {
     selectedSlidesForTranslation.clear();
     selectedSlidesForTranslation.add(AppState.currentSlide);
@@ -3447,7 +3006,7 @@ document.getElementById('translateSelectedSlidesBtn').onclick = translateSelecte
 document.getElementById('downloadSelectedPromptBtn').onclick = downloadSelectedPrompt;
 document.getElementById('openLoadResponseBtn').onclick = () => {
     document.getElementById('selectSlidesModal').style.display = 'none';
-    openLoadResponseModal(); 
+    openLoadResponseModal();
 };
 document.getElementById('closeLoadResponseBtn').onclick = () => {
     document.getElementById('loadResponseModal').style.display = 'none';
@@ -3460,7 +3019,7 @@ document.getElementById('loadResponseFromFileBtn').onclick = loadResponseFromFil
     document.getElementById('exportAppliedBtn').onclick = exportAppliedTranslation;
     document.getElementById('prevSlide').onclick = () => AppState.currentSlide > 0 && loadSlide(AppState.currentSlide-1);
     document.getElementById('nextSlide').onclick = () => AppState.currentSlide < AppState.totalSlides-1 && loadSlide(AppState.currentSlide+1);
-    
+
     document.getElementById('settingsBtn').onclick = () => document.getElementById('settingsModal').style.display = 'flex';
     document.getElementById('deepseekBtn').onclick = async () => {
         // Сначала синхронизируем enabled из настроек
@@ -3479,10 +3038,10 @@ document.getElementById('loadResponseFromFileBtn').onclick = loadResponseFromFil
     document.getElementById('statusBtn').onclick = async () => { await refreshSystemStatus(); document.getElementById('statusModal').style.display = 'flex'; };
     document.getElementById('helpBtn').onclick = () => document.getElementById('helpModal').style.display = 'flex';
     document.getElementById('activeGlossaryBtn').onclick = async () => { await loadActiveGlossary(); document.getElementById('activeGlossaryModal').style.display = 'flex'; };
-    
+
     document.querySelectorAll('[id^="close"]').forEach(b => b.onclick = () => b.closest('.modal').style.display = 'none');
     document.querySelectorAll('.modal').forEach(m => m.onclick = e => { if (e.target === m) m.style.display = 'none'; });
-    
+
     document.getElementById('enableLassoBtn').onclick = () => { if (!AppState.lassoMode) toggleLassoMode(); document.getElementById('lassoModal').style.display = 'none'; };
     document.getElementById('disableLassoBtn').onclick = () => { if (AppState.lassoMode) toggleLassoMode(); document.getElementById('lassoModal').style.display = 'none'; };
     document.getElementById('clearSelectionBtn').onclick = clearSelection;
@@ -3495,22 +3054,22 @@ document.getElementById('loadResponseFromFileBtn').onclick = loadResponseFromFil
     document.getElementById('closeSessionsBtn').onclick = () => {
         document.getElementById('sessionsModal').style.display = 'none';
     };
-    
+
     document.getElementById('clearAllMarkersFromMarkersBtn').onclick = () => { AppState.slideMarkers[AppState.currentSlide] = {}; renderSlide(); updateTextList(); saveMarkersToServer(); document.getElementById('markersModal').style.display = 'none'; };
-    
+
     document.getElementById('saveDeepseekSettingsBtn').onclick = async () => { await saveSettings(); document.getElementById('deepseekModal').style.display = 'none'; };
     document.getElementById('variantAddBtn').onclick = addVariantModal;
-    
+
     document.getElementById('sortTopBottomBtn').onclick = () => { AppState.settings.sort_direction = 'top-bottom'; applyAutoOrder(); renderSlide(); updateTextList(); document.getElementById('settingsModal').style.display = 'none'; };
     document.getElementById('sortLeftRightBtn').onclick = () => { AppState.settings.sort_direction = 'left-right'; applyAutoOrder(); renderSlide(); updateTextList(); document.getElementById('settingsModal').style.display = 'none'; };
     document.getElementById('sortZPatternBtn').onclick = () => { applyAutoOrder(); renderSlide(); updateTextList(); document.getElementById('settingsModal').style.display = 'none'; };
-    
+
     document.getElementById('clearAllMarkersBtn').onclick = () => { AppState.slideMarkers[AppState.currentSlide] = {}; renderSlide(); updateTextList(); document.getElementById('settingsModal').style.display = 'none'; };
     document.getElementById('clearAllAreasBtn').onclick = () => { delete AppState.slideAreas[AppState.currentSlide]; renderAreasList(); applyAreasOrder(); document.getElementById('settingsModal').style.display = 'none'; };
     document.getElementById('cleanWorkspaceBtn').onclick = cleanWorkspace;
     document.getElementById('exportSettingsBtn').onclick = exportSettings;
     document.getElementById('importSettingsBtn').onclick = importSettings;
-    
+
     document.getElementById('applyRunOrderBtn').onclick = () => {
         if (!currentRunOrderBlock) return;
         const o = document.getElementById('runOrderInput').value.trim();
@@ -3518,15 +3077,14 @@ document.getElementById('loadResponseFromFileBtn').onclick = loadResponseFromFil
         const nt = `[${o}] ${t}`; const id = currentRunOrderBlock.id;
         if (!AppState.allTranslations[AppState.currentSlide]) AppState.allTranslations[AppState.currentSlide] = {};
         if (!AppState.allTranslations[AppState.currentSlide][id]) AppState.allTranslations[AppState.currentSlide][id] = {};
-        AppState.allTranslations[AppState.currentSlide][id].variant_1_translation = nt;
-        AppState.allTranslations[AppState.currentSlide][id].variant_1_source = 'manual';
-        AppState.translations[id] = nt;
+        setSelectedTranslation(id, nt);
+        syncTranslationsToServer().catch(error => showStatus(error.message, 'error'));
         document.querySelector(`.text-translation textarea[data-id="${id}"]`).value = nt;
         updateSingleBlockPreview(id, nt);
         document.getElementById('runOrderModal').style.display = 'none';
         showStatus(`✅ ${o}`, 'success');
     };
-    
+
     document.getElementById('refreshActiveGlossaryBtn').onclick = loadActiveGlossary;
     document.getElementById('exportActiveGlossaryBtn').onclick = exportActiveGlossary;
 
@@ -3547,7 +3105,7 @@ document.getElementById('saveAsNewBtn').onclick = () => {
     document.getElementById('newSessionNameDiv').style.display = 'block';
     document.getElementById('saveAsNewBtn').style.background = '#10b981';
     document.getElementById('overwriteExistingBtn').style.background = '#f1f5f9';
-    
+
     // Заменяем кнопку сохранения
     const existingBtn = document.querySelector('#saveSessionModal .modal-buttons .btn-primary');
     if (!existingBtn) {
@@ -3566,20 +3124,20 @@ document.getElementById('overwriteExistingBtn').onclick = async () => {
     document.getElementById('existingSessionsList').style.display = 'block';
     document.getElementById('overwriteExistingBtn').style.background = '#10b981';
     document.getElementById('saveAsNewBtn').style.background = '#f1f5f9';
-    
+
     // Удаляем кнопку сохранения новой если есть
     const saveNewBtn = document.getElementById('confirmSaveNewBtn');
     if (saveNewBtn) saveNewBtn.remove();
-    
+
     // Загружаем список сессий
     const saveListDiv = document.getElementById('saveSessionsList');
     saveListDiv.innerHTML = '<div style="text-align: center; padding: 20px;">⏳ Загрузка...</div>';
-    
+
     try {
         const res = await fetch('/api/sessions/list');
         const data = await res.json();
         const sessions = data.sessions || [];
-        
+
         if (sessions.length === 0) {
             saveListDiv.innerHTML = '<div style="text-align: center; padding: 20px;">Нет сохраненных сессий</div>';
         } else {
@@ -3614,7 +3172,7 @@ document.getElementById('closeSaveSessionBtn').onclick = () => {
 
 // Кнопка сохранения сессии (вызов окна)
 document.getElementById('saveSessionBtn').onclick = openSaveSessionModal;
-    
+
     document.getElementById('manualEditorBtn').onclick = () => { loadManualTranslationsToEditor(); loadManualDraft(); document.getElementById('manualEditorModal').style.display = 'flex'; };
     document.getElementById('applyManualEditorBtn').onclick = applyManualTranslationsFromEditor;
     document.getElementById('closeManualEditorBtn').onclick = () => { saveManualDraft(); document.getElementById('manualEditorModal').style.display = 'none'; };
@@ -3622,7 +3180,7 @@ document.getElementById('saveSessionBtn').onclick = openSaveSessionModal;
     document.getElementById('manualEditorCopyBtn').onclick = () => { const ta = document.getElementById('manualEditorTextArea'); ta.select(); document.execCommand('copy'); };
     document.getElementById('manualEditorExportBtn').onclick = exportManualEditorToTxt;
     document.getElementById('manualEditorExportAppliedBtn').onclick = exportAppliedTranslation;
-    
+
     document.getElementById('blurRange').oninput = updateBlur;
     document.getElementById('whiteRange').oninput = updateBlur;
     document.getElementById('settingsBlurRange').oninput = function() { document.getElementById('blurRange').value = this.value; updateBlur(); };
@@ -3630,20 +3188,18 @@ document.getElementById('saveSessionBtn').onclick = openSaveSessionModal;
 
     document.getElementById('exportAllSlidesTranslationsBtn').onclick = exportAllSlidesTranslations;
     document.getElementById('importTranslationsBtn').onclick = importTranslationsFromFile;
-    
+
     const canvas = document.getElementById('slideCanvas');
     canvas.addEventListener('mousedown', startLasso);
     canvas.addEventListener('mousemove', updateLasso);
     canvas.addEventListener('mouseup', finishLasso);
     document.addEventListener('keydown', e => { if (e.key === 'Enter' && AppState.lassoMode && AppState.permanentSelectedBlocks.size) { createAreaFromSelection(); } });
-    
+
     window.showRunsInfo = showRunsInfo;
     window.showRunOrderModal = showRunOrderModal;
     window.cycleBlockMarker = cycleBlockMarker;
     window.selectBlockFromList = selectBlockFromList;
-    window.showAbbreviateOptions = showAbbreviateOptions;
-    window.applyAbbreviation = applyAbbreviation;
-    
+
     document.getElementById('buildTime').textContent = new Date().toLocaleString();
     showStatus('Готово', 'info');
 });
